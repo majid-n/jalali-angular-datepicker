@@ -3,7 +3,7 @@ import {DatePickerService} from './date-picker.service';
 import * as momentNs from 'jalali-moment';
 import {Moment} from 'jalali-moment';
 import {UtilsService} from '../common/services/utils/utils.service';
-import {DayTimeCalendarService} from '../day-time-calendar/day-time-calendar.service';
+// import {DayTimeCalendarService} from '../day-time-calendar/day-time-calendar.service';
 import {DayCalendarService} from '../day-calendar/day-calendar.service';
 import {TimeSelectService} from '../time-select/time-select.service';
 const moment = momentNs;
@@ -13,7 +13,7 @@ describe('Service: DatePicker', () => {
     TestBed.configureTestingModule({
       providers: [
         DatePickerService,
-        DayTimeCalendarService,
+        // DayTimeCalendarService,
         DayCalendarService,
         TimeSelectService,
         UtilsService

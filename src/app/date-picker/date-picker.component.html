@@ -22,12 +22,16 @@
                        [ngModel]="_selected"
                        [displayDate]="displayDate"
                        [theme]="theme"
-                       (onSelect)="dateSelected($event, 'day')"
+                       (onSelect)="dateSelected($event, 'day', true)"
                        (onGoToCurrent)="onGoToCurrent.emit()"
+                       (onSwitchLocale)="changeLocale(componentConfig.locale === 'fa' ? 'en' : 'fa')"
+                       (onTimeView)="onTimeView.emit()"
+                       (onMonthSelect)="dateSelected($event, 'month', true)"
                        (onLeftNav)="onLeftNavClick($event)"
+                       (onTimeChange)="dateSelected($event, 'second', true)"
                        (onRightNav)="onRightNavClick($event)">
       </dp-day-calendar>
-
+<!-- 
       <dp-month-calendar #monthCalendar
                          *ngSwitchCase="'month'"
                          [config]="dayCalendarConfig"
@@ -54,11 +58,12 @@
                             [displayDate]="displayDate"
                             [ngModel]="_selected && _selected[0]"
                             [theme]="theme"
+                            (onSwitchLocale)="changeLocale(componentConfig.locale === 'fa' ? 'en' : 'fa')"
                             (onChange)="dateSelected($event, 'second', true)"
                             (onGoToCurrent)="onGoToCurrent.emit()"
                             (onLeftNav)="onLeftNavClick($event)"
                             (onRightNav)="onRightNavClick($event)">
-      </dp-day-time-calendar>
+      </dp-day-time-calendar> -->
     </div>
   </div>
 </div>

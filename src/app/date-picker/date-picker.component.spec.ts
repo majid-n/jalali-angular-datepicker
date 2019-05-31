@@ -1,7 +1,7 @@
 import {FormsModule} from '@angular/forms';
 import {DatePickerComponent} from './date-picker.component';
-import {DayTimeCalendarComponent} from '../day-time-calendar/day-time-calendar.component';
-import {DayTimeCalendarService} from '../day-time-calendar/day-time-calendar.service';
+// import {DayTimeCalendarComponent} from '../day-time-calendar/day-time-calendar.component';
+// import {DayTimeCalendarService} from '../day-time-calendar/day-time-calendar.service';
 import {DomHelper} from '../common/services/dom-appender/dom-appender.service';
 import {CalendarMode} from '../common/types/calendar-mode';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -28,14 +28,14 @@ describe('Component: DatePickerComponent', () => {
       imports: [ FormsModule ],
       declarations: [
         DatePickerComponent,
-        DayTimeCalendarComponent,
+        // DayTimeCalendarComponent,
         DayCalendarComponent,
         TimeSelectComponent,
         CalendarNavComponent,
         MonthCalendarComponent
       ],
       providers: [
-        DayTimeCalendarService,
+        // DayTimeCalendarService,
         DayCalendarService,
         TimeSelectService,
         UtilsService,
@@ -66,7 +66,7 @@ describe('Component: DatePickerComponent', () => {
     setComponentMode('month');
 
     spyOn(component.onGoToCurrent, 'emit');
-    component.monthCalendarRef.onGoToCurrent.emit();
+    // component.monthCalendarRef.onGoToCurrent.emit();
     expect(component.onGoToCurrent.emit).toHaveBeenCalledWith();
   });
 
@@ -74,7 +74,7 @@ describe('Component: DatePickerComponent', () => {
     setComponentMode('daytime');
 
     spyOn(component.onGoToCurrent, 'emit');
-    component.dayTimeCalendarRef.onGoToCurrent.emit();
+    // component.dayTimeCalendarRef.onGoToCurrent.emit();
     expect(component.onGoToCurrent.emit).toHaveBeenCalledWith();
   });
 });

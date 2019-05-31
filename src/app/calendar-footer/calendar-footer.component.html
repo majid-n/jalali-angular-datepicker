@@ -1,0 +1,28 @@
+<div class="dp-calendar-footer-container {{ theme }}">
+    <button
+        type="button"
+        class="dp-footer-btn"
+        *ngIf="showGoToCurrent"
+        (click)="GoToCurrent()">
+        <ng-container [ngSwitch]="currentMode">
+            <span *ngSwitchCase="'time'">الان</span>
+            <span *ngSwitchCase="'month'">این ماه</span>
+            <span *ngSwitchDefault>امروز</span>
+        </ng-container>
+    </button>
+    <button
+        type="button"
+        class="dp-footer-btn"
+        *ngIf="showSwitchLocale"
+        (click)="SwitchLocale()">
+        {{ currentLocale === 'fa' ? 'میلادی' : 'جلالی'}}
+    </button>
+    <button
+        type="button"
+        class="dp-footer-btn dp-time-btn"
+        [ngClass]="{'dp-calendar-icon': currentMode === 'time'}"
+        *ngIf="showTimeView"
+        (click)="TimeView()">
+    </button>
+</div>
+    

@@ -28,6 +28,8 @@ export interface IConfig {
   showMultipleYearsNavigation?: boolean;
   returnedValueType?: ECalendarValue;
   showGoToCurrent?: boolean;
+  showSwitchLocale?: boolean;
+  showTimeView?: boolean;
   unSelectOnClick?: boolean;
 }
 

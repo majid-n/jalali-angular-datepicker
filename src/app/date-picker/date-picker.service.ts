@@ -1,139 +1,134 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {IDatePickerConfig, IDatePickerConfigInternal} from './date-picker-config.model';
+import { EventEmitter, Injectable } from '@angular/core';
+import { IDatePickerConfig, IDatePickerConfigInternal } from './date-picker-config.model';
+import { UtilsService } from '../common/services/utils/utils.service';
+import { IDayCalendarConfig } from '../day-calendar/day-calendar-config.model';
+import { TimeSelectService } from '../time-select/time-select.service';
+import { ITimeSelectConfig } from '../time-select/time-select-config.model';
+import { CalendarMode } from '../common/types/calendar-mode';
+import { Moment } from 'jalali-moment';
 import * as momentNs from 'jalali-moment';
-import {Moment} from 'jalali-moment';
-import {UtilsService} from '../common/services/utils/utils.service';
-import {IDayCalendarConfig} from '../day-calendar/day-calendar-config.model';
-import {TimeSelectService} from '../time-select/time-select.service';
-import {DayTimeCalendarService} from '../day-time-calendar/day-time-calendar.service';
-import {ITimeSelectConfig} from '../time-select/time-select-config.model';
-import {CalendarMode} from '../common/types/calendar-mode';
-import {CalendarValue} from '../common/types/calendar-value';
 const moment = momentNs;
 
 @Injectable()
 export class DatePickerService {
-  readonly onPickerClosed: EventEmitter<null> = new EventEmitter();
-  private defaultConfig: IDatePickerConfigInternal = {
-    closeOnSelect: true,
-    closeOnSelectDelay: 100,
-    format: 'YYYY-MM-D',
-    openOnFocus: true,
-    openOnClick: true,
-    onOpenDelay: 0,
-    disableKeypress: false,
-    showNearMonthDays: true,
-    showWeekNumbers: false,
-    enableMonthSelector: true,
-    showGoToCurrent: true,
-    locale: 'fa',
-    hideOnOutsideClick: true
-  };
-  private gregorianExtensionConfig: IDatePickerConfig = {
-    format: 'DD-MM-YYYY',
-    locale: 'en'
-  };
-  constructor(private utilsService: UtilsService,
-              private timeSelectService: TimeSelectService,
-              private daytimeCalendarService: DayTimeCalendarService) {
-  }
-
-  // todo:: add unit tests
-  getConfig(config: IDatePickerConfig, mode: CalendarMode = 'daytime'): IDatePickerConfigInternal {
-    const _config = <IDatePickerConfigInternal>{
-      ...this.defaultConfig,
-      ...((config && config.locale && config.locale !== 'fa') ? this.gregorianExtensionConfig : {}),
-      format: this.getDefaultFormatByMode(mode, config),
-      ...this.utilsService.clearUndefined(config)
+    readonly onPickerClosed: EventEmitter<null> = new EventEmitter();
+    private defaultConfig: IDatePickerConfigInternal = {
+        closeOnSelect: true,
+        closeOnSelectDelay: 100,
+        format: 'YYYY-MM-D',
+        openOnFocus: true,
+        openOnClick: true,
+        onOpenDelay: 0,
+        disableKeypress: false,
+        showNearMonthDays: true,
+        showWeekNumbers: false,
+        enableMonthSelector: true,
+        showGoToCurrent: true,
+        locale: 'fa',
+        hideOnOutsideClick: true
     };
-
-    this.utilsService.convertPropsToMoment(_config, _config.format, ['min', 'max'], _config.locale);
-
-    if (config && config.allowMultiSelect && config.closeOnSelect === undefined) {
-      _config.closeOnSelect = false;
-    }
-
-    // moment.locale(_config.locale);
-
-    return _config;
-  }
-
-  getDayConfigService(pickerConfig: IDatePickerConfig): IDayCalendarConfig {
-    return {
-      min: pickerConfig.min,
-      max: pickerConfig.max,
-      isDayDisabledCallback: pickerConfig.isDayDisabledCallback,
-      weekDayFormat: pickerConfig.weekDayFormat,
-      showNearMonthDays: pickerConfig.showNearMonthDays,
-      showWeekNumbers: pickerConfig.showWeekNumbers,
-      firstDayOfWeek: pickerConfig.firstDayOfWeek,
-      format: pickerConfig.format,
-      allowMultiSelect: pickerConfig.allowMultiSelect,
-      monthFormat: pickerConfig.monthFormat,
-      monthFormatter: pickerConfig.monthFormatter,
-      enableMonthSelector: pickerConfig.enableMonthSelector,
-      yearFormat: pickerConfig.yearFormat,
-      yearFormatter: pickerConfig.yearFormatter,
-      dayBtnFormat: pickerConfig.dayBtnFormat,
-      dayBtnFormatter: pickerConfig.dayBtnFormatter,
-      dayBtnCssClassCallback: pickerConfig.dayBtnCssClassCallback,
-      monthBtnFormat: pickerConfig.monthBtnFormat,
-      monthBtnFormatter: pickerConfig.monthBtnFormatter,
-      monthBtnCssClassCallback: pickerConfig.monthBtnCssClassCallback,
-      multipleYearsNavigateBy: pickerConfig.multipleYearsNavigateBy,
-      showMultipleYearsNavigation: pickerConfig.showMultipleYearsNavigation,
-      locale: pickerConfig.locale,
-      returnedValueType: pickerConfig.returnedValueType,
-      showGoToCurrent: pickerConfig.showGoToCurrent,
-      unSelectOnClick: pickerConfig.unSelectOnClick
+    private gregorianExtensionConfig: IDatePickerConfig = {
+        format: 'DD-MM-YYYY',
+        locale: 'en'
     };
-  }
+    constructor(
+        private utilsService: UtilsService,
+        private timeSelectService: TimeSelectService) {}
 
-  getDayTimeConfigService(pickerConfig: IDatePickerConfig): ITimeSelectConfig {
-    return this.daytimeCalendarService.getConfig(pickerConfig);
-  }
+    // todo:: add unit tests
+    getConfig(config: IDatePickerConfig, mode: CalendarMode = 'daytime'): IDatePickerConfigInternal {
+        const _config = <IDatePickerConfigInternal>{
+            ...this.defaultConfig,
+            ...((config && config.locale && config.locale !== 'fa') ? this.gregorianExtensionConfig : {}),
+            format: this.getDefaultFormatByMode(mode, config),
+            ...this.utilsService.clearUndefined(config)
+        };
 
-  getTimeConfigService(pickerConfig: IDatePickerConfig): ITimeSelectConfig {
-    return this.timeSelectService.getConfig(pickerConfig);
-  }
+        this.utilsService.convertPropsToMoment(_config, _config.format, ['min', 'max'], _config.locale);
 
-  pickerClosed() {
-    this.onPickerClosed.emit();
-  }
+        if (config && config.allowMultiSelect && config.closeOnSelect === undefined) {
+            _config.closeOnSelect = false;
+        }
 
-  // todo:: add unit tests
-  isValidInputDateValue(value: string, config: IDatePickerConfig): boolean {
-    value = value ? value : '';
-    const datesStrArr: string[] = this.utilsService.datesStringToStringArray(value);
+        // moment.locale(_config.locale);
 
-    return datesStrArr.every(date => this.utilsService.isDateValid(date, config.format, config.locale));
-  }
-
-  // todo:: add unit tests
-  convertInputValueToMomentArray(value: string, config: IDatePickerConfig): Moment[] {
-    value = value ? value : '';
-    const datesStrArr: string[] = this.utilsService.datesStringToStringArray(value);
-
-    return this.utilsService.convertToMomentArray(datesStrArr, config.format, config.allowMultiSelect, config.locale);
-  }
-
-  private getDefaultFormatByMode(mode: CalendarMode, config: IDatePickerConfig): string {
-    let dateFormat = 'YYYY-MM-DD';
-    let monthFormat = 'MMMM YY';
-    const timeFormat = 'HH:mm:ss';
-    if (config && config.locale && config.locale !== 'fa') {
-      dateFormat = 'DD-MM-YYYY';
-      monthFormat = 'MMM, YYYY';
+        return _config;
     }
-    switch (mode) {
-      case 'day':
-        return dateFormat;
-      case 'daytime':
-        return dateFormat + ' ' + timeFormat;
-      case 'time':
-        return timeFormat;
-      case 'month':
-        return monthFormat;
+
+    getDayConfigService(pickerConfig: IDatePickerConfig): IDayCalendarConfig {
+        return {
+            min: pickerConfig.min,
+            max: pickerConfig.max,
+            isDayDisabledCallback: pickerConfig.isDayDisabledCallback,
+            weekDayFormat: pickerConfig.weekDayFormat,
+            showNearMonthDays: pickerConfig.showNearMonthDays,
+            showWeekNumbers: pickerConfig.showWeekNumbers,
+            firstDayOfWeek: pickerConfig.firstDayOfWeek,
+            format: pickerConfig.format,
+            allowMultiSelect: pickerConfig.allowMultiSelect,
+            monthFormat: pickerConfig.monthFormat,
+            monthFormatter: pickerConfig.monthFormatter,
+            enableMonthSelector: pickerConfig.enableMonthSelector,
+            yearFormat: pickerConfig.yearFormat,
+            yearFormatter: pickerConfig.yearFormatter,
+            dayBtnFormat: pickerConfig.dayBtnFormat,
+            dayBtnFormatter: pickerConfig.dayBtnFormatter,
+            dayBtnCssClassCallback: pickerConfig.dayBtnCssClassCallback,
+            monthBtnFormat: pickerConfig.monthBtnFormat,
+            monthBtnFormatter: pickerConfig.monthBtnFormatter,
+            monthBtnCssClassCallback: pickerConfig.monthBtnCssClassCallback,
+            multipleYearsNavigateBy: pickerConfig.multipleYearsNavigateBy,
+            showMultipleYearsNavigation: pickerConfig.showMultipleYearsNavigation,
+            locale: pickerConfig.locale,
+            returnedValueType: pickerConfig.returnedValueType,
+            showGoToCurrent: pickerConfig.showGoToCurrent,
+            showSwitchLocale: pickerConfig.showSwitchLocale,
+            showTimeView: pickerConfig.showTimeView,
+            unSelectOnClick: pickerConfig.unSelectOnClick
+        };
     }
-  }
+
+    getTimeConfigService(pickerConfig: IDatePickerConfig): ITimeSelectConfig {
+        return this.timeSelectService.getConfig(pickerConfig);
+    }
+
+    pickerClosed() {
+        this.onPickerClosed.emit();
+    }
+
+    // todo:: add unit tests
+    isValidInputDateValue(value: string, config: IDatePickerConfig): boolean {
+        value = value ? value : '';
+        const datesStrArr: string[] = this.utilsService.datesStringToStringArray(value);
+
+        return datesStrArr.every(date => this.utilsService.isDateValid(date, config.format, config.locale));
+    }
+
+    // todo:: add unit tests
+    convertInputValueToMomentArray(value: string, config: IDatePickerConfig): Moment[] {
+        value = value ? value : '';
+        const datesStrArr: string[] = this.utilsService.datesStringToStringArray(value);
+
+        return this.utilsService.convertToMomentArray(datesStrArr, config.format, config.allowMultiSelect, config.locale);
+    }
+
+    private getDefaultFormatByMode(mode: CalendarMode, config: IDatePickerConfig): string {
+        let dateFormat = 'YYYY/MM/DD';
+        let monthFormat = 'MMMM YY';
+        const timeFormat = 'HH:mm:ss';
+        if (config && config.locale && config.locale !== 'fa') {
+            dateFormat = 'DD-MM-YYYY';
+            monthFormat = 'MMM, YYYY';
+        }
+        switch (mode) {
+            case 'day':
+                return dateFormat;
+            case 'daytime':
+                return dateFormat + ' ' + timeFormat;
+            case 'time':
+                return timeFormat;
+            case 'month':
+                return monthFormat;
+        }
+    }
 }

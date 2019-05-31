@@ -1,352 +1,420 @@
-import {ECalendarValue} from '../common/types/calendar-value-enum';
-import {SingleCalendarValue} from '../common/types/single-calendar-value';
-import {ECalendarMode} from '../common/types/calendar-mode-enum';
+import { ECalendarValue } from '../common/types/calendar-value-enum';
+import { SingleCalendarValue } from '../common/types/single-calendar-value';
+import { ECalendarMode } from '../common/types/calendar-mode-enum';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  forwardRef,
-  HostBinding,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChange,
-  SimpleChanges,
-  ViewEncapsulation
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChange,
+    SimpleChanges,
+    ViewEncapsulation
 } from '@angular/core';
-import {DayCalendarService} from './day-calendar.service';
+import { DayCalendarService } from './day-calendar.service';
 import * as momentNs from 'jalali-moment';
-import {Moment, MomentInput, unitOfTime} from 'jalali-moment';
-import {IDayCalendarConfig, IDayCalendarConfigInternal} from './day-calendar-config.model';
-import {IDay} from './day.model';
+import { Moment, MomentInput, unitOfTime } from 'jalali-moment';
+import { IDayCalendarConfig, IDayCalendarConfigInternal } from './day-calendar-config.model';
+import { IDay } from './day.model';
 import {
-  ControlValueAccessor,
-  FormControl,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator
+    ControlValueAccessor,
+    FormControl,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator
 } from '@angular/forms';
-import {CalendarValue} from '../common/types/calendar-value';
-import {UtilsService} from '../common/services/utils/utils.service';
-import {IMonthCalendarConfig} from '../month-calendar/month-calendar-config';
-import {IMonth} from '../month-calendar/month.model';
-import {DateValidator} from '../common/types/validator.type';
-import {INavEvent} from '../common/models/navigation-event.model';
+import { CalendarValue } from '../common/types/calendar-value';
+import { UtilsService } from '../common/services/utils/utils.service';
+import { IMonthCalendarConfig } from '../month-calendar/month-calendar-config';
+import { IMonth } from '../month-calendar/month.model';
+import { DateValidator } from '../common/types/validator.type';
+import { INavEvent } from '../common/models/navigation-event.model';
+import { ITimeSelectConfig } from '../time-select/time-select-config.model';
+import { DatePickerService } from '../date-picker/date-picker.service';
 const moment = momentNs;
 
 @Component({
-  selector: 'dp-day-calendar',
-  templateUrl: 'day-calendar.component.html',
-  styleUrls: ['day-calendar.component.less'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    DayCalendarService,
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DayCalendarComponent),
-      multi: true
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => DayCalendarComponent),
-      multi: true
-    }
-  ]
+    selector: 'dp-day-calendar',
+    templateUrl: 'day-calendar.component.html',
+    styleUrls: ['day-calendar.component.less'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        DayCalendarService,
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => DayCalendarComponent),
+            multi: true
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => DayCalendarComponent),
+            multi: true
+        }
+    ]
 })
 export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
 
-  @Input() config: IDayCalendarConfig;
-  @Input() displayDate: SingleCalendarValue;
-  @Input() minDate: Moment;
-  @Input() maxDate: Moment;
-  @HostBinding('class') @Input() theme: string;
+    @Input() config: IDayCalendarConfig;
+    @Input() displayDate: SingleCalendarValue;
+    @Input() minDate: Moment;
+    @Input() maxDate: Moment;
+    @HostBinding('class') @Input() theme: string;
 
-  @Output() onSelect: EventEmitter<IDay> = new EventEmitter();
-  @Output() onMonthSelect: EventEmitter<IMonth> = new EventEmitter();
-  @Output() onNavHeaderBtnClick: EventEmitter<ECalendarMode> = new EventEmitter();
-  @Output() onGoToCurrent: EventEmitter<void> = new EventEmitter();
-  @Output() onLeftNav: EventEmitter<INavEvent> = new EventEmitter();
-  @Output() onRightNav: EventEmitter<INavEvent> = new EventEmitter();
+    @Output() onSelect: EventEmitter<IDay> = new EventEmitter();
+    @Output() onMonthSelect: EventEmitter<IMonth> = new EventEmitter();
+    @Output() onNavHeaderBtnClick: EventEmitter<ECalendarMode> = new EventEmitter();
+    @Output() onGoToCurrent: EventEmitter<void> = new EventEmitter();
+    @Output() onSwitchLocale: EventEmitter<void> = new EventEmitter();
+    @Output() onTimeView: EventEmitter<void> = new EventEmitter();
+    @Output() onTimeChange: EventEmitter<any> = new EventEmitter();
+    @Output() onLeftNav: EventEmitter<INavEvent> = new EventEmitter();
+    @Output() onRightNav: EventEmitter<INavEvent> = new EventEmitter();
+    @Output() onLeftSecondaryNav: EventEmitter<INavEvent> = new EventEmitter();
+    @Output() onRightSecondaryNav: EventEmitter<INavEvent> = new EventEmitter();
 
-  CalendarMode = ECalendarMode;
-  isInited: boolean = false;
-  componentConfig: IDayCalendarConfigInternal;
-  _selected: Moment[];
-  weeks: IDay[][];
-  weekdays: Moment[];
-  _currentDateView: Moment;
-  inputValue: CalendarValue;
-  inputValueType: ECalendarValue;
-  validateFn: DateValidator;
-  currentCalendarMode: ECalendarMode = ECalendarMode.Day;
-  monthCalendarConfig: IMonthCalendarConfig;
-  _shouldShowCurrent: boolean = true;
-  navLabel: string;
-  showLeftNav: boolean;
-  showRightNav: boolean;
+    CalendarMode = ECalendarMode;
+    isInited: boolean = false;
+    componentConfig: IDayCalendarConfigInternal;
+    timeSelectConfig: ITimeSelectConfig;
+    _selected: Moment[];
+    weeks: IDay[][];
+    weekdays: Moment[];
+    _currentDateView: Moment;
+    inputValue: CalendarValue;
+    inputValueType: ECalendarValue;
+    validateFn: DateValidator;
+    currentCalendarMode: ECalendarMode = ECalendarMode.Day;
+    monthCalendarConfig: IMonthCalendarConfig;
+    _shouldShowCurrent: boolean = true;
+    navLabel: string;
+    showLeftNav: boolean;
+    showRightNav: boolean;
+    showLeftSecondaryNav: boolean;
+    showRightSecondaryNav: boolean;
+    _showSwitchLocale: boolean = true;
+    _showTimeView: boolean = true;
+    viewmode: string = 'day';
 
-  api = {
-    moveCalendarsBy: this.moveCalendarsBy.bind(this),
-    moveCalendarTo: this.moveCalendarTo.bind(this),
-    toggleCalendarMode: this.toggleCalendarMode.bind(this)
-  };
-
-  set selected(selected: Moment[]) {
-    this._selected = selected;
-    this.onChangeCallback(this.processOnChangeCallback(selected));
-  }
-
-  get selected(): Moment[] {
-    return this._selected;
-  }
-
-  set currentDateView(current: Moment) {
-    this._currentDateView = current.clone();
-    this.weeks = this.dayCalendarService
-      .generateMonthArray(this.componentConfig, this._currentDateView, this.selected);
-    this.navLabel = this.dayCalendarService.getHeaderLabel(this.componentConfig, this._currentDateView);
-    this.showLeftNav = this.dayCalendarService.shouldShowLeft(this.componentConfig.min, this.currentDateView);
-    this.showRightNav = this.dayCalendarService.shouldShowRight(this.componentConfig.max, this.currentDateView);
-  }
-
-  get currentDateView(): Moment {
-    return this._currentDateView;
-  }
-
-  constructor(public readonly dayCalendarService: DayCalendarService,
-              public readonly utilsService: UtilsService,
-              public readonly cd: ChangeDetectorRef) {
-  }
-
-  ngOnInit() {
-    this.isInited = true;
-    this.init();
-    this.initValidators();
-  }
-
-  init() {
-    this.componentConfig = this.dayCalendarService.getConfig(this.config);
-    this.selected = this.selected || [];
-    this.currentDateView = this.displayDate
-      ? this.utilsService.convertToMoment(this.displayDate, this.componentConfig.format, this.componentConfig.locale).clone()
-      : this.utilsService
-        .getDefaultDisplayDate(
-          this.currentDateView,
-          this.selected,
-          this.componentConfig.allowMultiSelect,
-          this.componentConfig.min,
-          this.componentConfig.locale
-        );
-    this.weekdays = this.dayCalendarService
-      .generateWeekdays(this.componentConfig.firstDayOfWeek, this.componentConfig.locale);
-    this.inputValueType = this.utilsService.getInputType(this.inputValue, this.componentConfig.allowMultiSelect);
-    this.monthCalendarConfig = this.dayCalendarService.getMonthCalendarConfig(this.componentConfig);
-    this._shouldShowCurrent = this.shouldShowCurrent();
-  }
-  isFarsi() {
-    return this.componentConfig.locale === 'fa';
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.isInited) {
-      const {minDate, maxDate, config} = changes;
-
-      this.handleConfigChange(config);
-      this.init();
-
-      if (minDate || maxDate) {
-        this.initValidators();
-      }
-    }
-  }
-
-  writeValue(value: CalendarValue): void {
-    if (value === this.inputValue
-      || (this.inputValue
-       && (moment.isMoment(this.inputValue)) && (this.inputValue as Moment).isSame(<MomentInput>value))
-    ) {
-      return;
-    }
-
-    this.inputValue = value;
-
-    if (value) {
-      this.selected = this.utilsService
-        .convertToMomentArray(value, this.componentConfig.format, this.componentConfig.allowMultiSelect, this.componentConfig.locale);
-      this.inputValueType = this.utilsService
-        .getInputType(this.inputValue, this.componentConfig.allowMultiSelect);
-    } else {
-      this.selected = [];
-    }
-
-    this.weeks = this.dayCalendarService
-      .generateMonthArray(this.componentConfig, this.currentDateView, this.selected);
-
-    this.cd.markForCheck();
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChangeCallback = fn;
-  }
-
-  onChangeCallback(_: any) {
-  };
-
-  registerOnTouched(fn: any): void {
-  }
-
-  validate(formControl: FormControl): ValidationErrors | any {
-    if (this.minDate || this.maxDate) {
-      return this.validateFn(formControl.value);
-    } else {
-      return () => null;
-    }
-  }
-
-  processOnChangeCallback(value: Moment[]): CalendarValue {
-    return this.utilsService.convertFromMomentArray(
-      this.componentConfig.format,
-      value,
-      this.componentConfig.returnedValueType || this.inputValueType,
-      this.componentConfig.locale
-    );
-  }
-
-  initValidators() {
-    this.validateFn = this.utilsService.createValidator(
-      {minDate: this.minDate, maxDate: this.maxDate},
-      this.componentConfig.format,
-      'day',
-      this.componentConfig.locale
-    );
-
-    this.onChangeCallback(this.processOnChangeCallback(this.selected));
-  }
-
-  dayClicked(day: IDay) {
-    if (day.selected && !this.componentConfig.unSelectOnClick) {
-      return;
-    }
-
-    this.selected = this.utilsService
-      .updateSelected(this.componentConfig.allowMultiSelect, this.selected, day);
-    this.weeks = this.dayCalendarService
-      .generateMonthArray(this.componentConfig, this.currentDateView, this.selected);
-    this.onSelect.emit(day);
-  }
-
-  getDayBtnText(day: IDay): string {
-    return this.dayCalendarService.getDayBtnText(this.componentConfig, day.date);
-  }
-
-  getDayBtnCssClass(day: IDay): {[klass: string]: boolean} {
-    const cssClasses: {[klass: string]: boolean} = {
-      'dp-selected': day.selected,
-      'dp-current-month': day.currentMonth,
-      'dp-prev-month': day.prevMonth,
-      'dp-next-month': day.nextMonth,
-      'dp-current-day': day.currentDay
+    api = {
+        moveCalendarsBy: this.moveCalendarsBy.bind(this),
+        moveCalendarTo: this.moveCalendarTo.bind(this),
+        toggleCalendarMode: this.toggleCalendarMode.bind(this)
     };
-    const customCssClass: string = this.dayCalendarService.getDayBtnCssClass(this.componentConfig, day.date);
-    if (customCssClass) {
-      cssClasses[customCssClass] = true;
+
+    set selected(selected: Moment[]) {
+        this._selected = selected;
+        this.onChangeCallback(this.processOnChangeCallback(selected));
     }
 
-    return cssClasses;
-  }
-
-  onLeftNavClick() {
-    const from = this.currentDateView.clone();
-    this.moveCalendarsBy(this.currentDateView, -1, 'month');
-    const to = this.currentDateView.clone();
-    this.onLeftNav.emit({from, to});
-  }
-
-  onRightNavClick() {
-    const from = this.currentDateView.clone();
-    this.moveCalendarsBy(this.currentDateView, 1, 'month');
-    const to = this.currentDateView.clone();
-    this.onRightNav.emit({from, to});
-  }
-
-  onMonthCalendarLeftClick(change: INavEvent) {
-    this.onLeftNav.emit(change);
-  }
-
-  onMonthCalendarRightClick(change: INavEvent) {
-    this.onRightNav.emit(change);
-  }
-
-  onMonthCalendarSecondaryLeftClick(change: INavEvent) {
-    this.onRightNav.emit(change);
-  }
-
-  onMonthCalendarSecondaryRightClick(change: INavEvent) {
-    this.onLeftNav.emit(change);
-  }
-
-  getWeekdayName(weekday: Moment): string {
-    if (this.componentConfig.weekDayFormatter) {
-      return this.componentConfig.weekDayFormatter(weekday.day());
+    get selected(): Moment[] {
+        return this._selected;
     }
 
-    return weekday.format(this.componentConfig.weekDayFormat);
-  }
-
-  toggleCalendarMode(mode: ECalendarMode) {
-    if (this.currentCalendarMode !== mode) {
-      this.currentCalendarMode = mode;
-      this.onNavHeaderBtnClick.emit(mode);
+    set currentDateView(current: Moment) {
+        let ismonth = this.viewmode === 'month';
+        this._currentDateView = current.clone();
+        this.weeks = this.dayCalendarService
+            .generateMonthArray(this.componentConfig, this._currentDateView, this.selected);
+        this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig, this._currentDateView, ismonth ? 'year' : 'month');
+        this.showLeftNav = this.dayCalendarService.shouldShowLeft(this.componentConfig.min, this.currentDateView);
+        this.showRightNav = this.dayCalendarService.shouldShowRight(this.componentConfig.max, this.currentDateView);
+        this.showLeftSecondaryNav = this.componentConfig.showMultipleYearsNavigation && this.showLeftNav;
+        this.showRightSecondaryNav = this.componentConfig.showMultipleYearsNavigation && this.showRightNav;
     }
 
-    this.cd.markForCheck();
-  }
-
-  monthSelected(month: IMonth) {
-    this.currentDateView = month.date.clone();
-    this.currentCalendarMode = ECalendarMode.Day;
-    this.onMonthSelect.emit(month);
-  }
-
-  moveCalendarsBy(current: Moment, amount: number, granularity: unitOfTime.Base = 'month') {
-    this.currentDateView = current.clone().add(amount, granularity);
-    this.cd.markForCheck();
-  }
-
-  moveCalendarTo(to: SingleCalendarValue) {
-    if (to) {
-      this.currentDateView = this.utilsService.convertToMoment(to, this.componentConfig.format, this.componentConfig.locale);
+    get currentDateView(): Moment {
+        return this._currentDateView;
     }
 
-    this.cd.markForCheck();
-  }
-
-  shouldShowCurrent(): boolean {
-    return this.utilsService.shouldShowCurrent(
-      this.componentConfig.showGoToCurrent,
-      'day',
-      this.componentConfig.min,
-      this.componentConfig.max
-    );
-  }
-
-  goToCurrent() {
-    this.currentDateView = moment().locale(this.componentConfig.locale);
-    this.onGoToCurrent.emit();
-  }
-
-  handleConfigChange(config: SimpleChange) {
-    if (config) {
-      const prevConf: IDayCalendarConfigInternal = this.dayCalendarService.getConfig(config.previousValue);
-      const currentConf: IDayCalendarConfigInternal = this.dayCalendarService.getConfig(config.currentValue);
-
-      if (this.utilsService.shouldResetCurrentView(prevConf, currentConf)) {
-        this._currentDateView = null;
-      }
+    constructor(public readonly dayCalendarService: DayCalendarService,
+        public readonly dayPickerService: DatePickerService,
+        public readonly utilsService: UtilsService,
+        public readonly cd: ChangeDetectorRef) {
     }
-  }
+
+    ngOnInit() {
+        this.isInited = true;
+        this.init();
+        this.initValidators();
+    }
+
+    init() {
+        this.componentConfig = this.dayCalendarService.getConfig(this.config);
+        this.selected = this.selected || [];
+        this.currentDateView = this.displayDate
+            ? this.utilsService.convertToMoment(this.displayDate, this.componentConfig.format, this.componentConfig.locale).clone()
+            : this.utilsService
+                .getDefaultDisplayDate(
+                    this.currentDateView,
+                    this.selected,
+                    this.componentConfig.allowMultiSelect,
+                    this.componentConfig.min,
+                    this.componentConfig.locale
+                );
+        this.weekdays = this.dayCalendarService
+            .generateWeekdays(this.componentConfig.firstDayOfWeek, this.componentConfig.locale);
+        this.inputValueType = this.utilsService.getInputType(this.inputValue, this.componentConfig.allowMultiSelect);
+        this.monthCalendarConfig = this.dayCalendarService.getMonthCalendarConfig(this.componentConfig);
+        this.timeSelectConfig = this.dayPickerService.getTimeConfigService(this.componentConfig);
+        this._shouldShowCurrent = this.shouldShowCurrent();
+        this._showSwitchLocale = this.componentConfig.showSwitchLocale && this._showSwitchLocale;
+        this._showTimeView = this.componentConfig.showTimeView && this._showTimeView;
+    }
+    isFarsi() {
+        return this.componentConfig.locale === 'fa';
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (this.isInited) {
+            const { minDate, maxDate, config } = changes;
+
+            this.handleConfigChange(config);
+            this.init();
+
+            if (minDate || maxDate) {
+                this.initValidators();
+            }
+        }
+    }
+
+    writeValue(value: CalendarValue): void {
+        if (value === this.inputValue
+            || (this.inputValue
+                && (moment.isMoment(this.inputValue)) && (this.inputValue as Moment).isSame(<MomentInput>value))
+        ) {
+            return;
+        }
+
+        this.inputValue = value;
+
+        if (value) {
+            this.selected = this.utilsService
+                .convertToMomentArray(value, this.componentConfig.format, this.componentConfig.allowMultiSelect, this.componentConfig.locale);
+            this.inputValueType = this.utilsService
+                .getInputType(this.inputValue, this.componentConfig.allowMultiSelect);
+        } else {
+            this.selected = [];
+        }
+
+        this.weeks = this.dayCalendarService
+            .generateMonthArray(this.componentConfig, this.currentDateView, this.selected);
+
+        this.cd.markForCheck();
+    }
+
+    registerOnChange(fn: any): void {
+        this.onChangeCallback = fn;
+    }
+
+    onChangeCallback(_: any) {
+    };
+
+    registerOnTouched(fn: any): void {
+    }
+
+    validate(formControl: FormControl): ValidationErrors | any {
+        if (this.minDate || this.maxDate) {
+            return this.validateFn(formControl.value);
+        } else {
+            return () => null;
+        }
+    }
+
+    processOnChangeCallback(value: Moment[]): CalendarValue {
+        return this.utilsService.convertFromMomentArray(
+            this.componentConfig.format,
+            value,
+            this.componentConfig.returnedValueType || this.inputValueType,
+            this.componentConfig.locale
+        );
+    }
+
+    initValidators() {
+        this.validateFn = this.utilsService.createValidator(
+            { minDate: this.minDate, maxDate: this.maxDate },
+            this.componentConfig.format,
+            'day',
+            this.componentConfig.locale
+        );
+
+        this.onChangeCallback(this.processOnChangeCallback(this.selected));
+    }
+
+    dayClicked(day: IDay) {
+        if (day.selected && !this.componentConfig.unSelectOnClick) {
+            return;
+        }
+
+        this.selected = this.utilsService
+            .updateSelected(this.componentConfig.allowMultiSelect, this.selected, day);
+        this.weeks = this.dayCalendarService
+            .generateMonthArray(this.componentConfig, this.currentDateView, this.selected);
+        this.onSelect.emit(day);
+    }
+
+    getDayBtnText(day: IDay): string {
+        return this.dayCalendarService.getDayBtnText(this.componentConfig, day.date);
+    }
+
+    getDayBtnCssClass(day: IDay): { [klass: string]: boolean } {
+        const cssClasses: { [klass: string]: boolean } = {
+            'dp-selected': day.selected,
+            'dp-current-month': day.currentMonth,
+            'dp-prev-month': day.prevMonth,
+            'dp-next-month': day.nextMonth,
+            'dp-current-day': day.currentDay
+        };
+        const customCssClass: string = this.dayCalendarService.getDayBtnCssClass(this.componentConfig, day.date);
+        if (customCssClass) {
+            cssClasses[customCssClass] = true;
+        }
+
+        return cssClasses;
+    }
+    
+    onNavClick(side: string) {
+        let _side = side.charAt(0).toUpperCase() + side.slice(1).toLowerCase();
+        const from = this.currentDateView.clone();
+        const isday = this.viewmode === 'day';
+        this.moveCalendarsBy(this.currentDateView, _side === 'Left' ? -1 : 1, isday ? 'month' : 'year');
+        const to = this.currentDateView.clone();
+        this[`on${_side}Nav`].emit({ from, to });
+    }
+
+    onLeftSecondaryNavClick() {
+        let navigateBy = this.componentConfig.multipleYearsNavigateBy;
+        const isOutsideRange = this.componentConfig.min &&
+            this.currentDateView.year() - this.componentConfig.min.year() < navigateBy;
+
+        if (isOutsideRange) {
+            navigateBy = this.currentDateView.year() - this.componentConfig.min.year();
+        }
+
+        const from = this.currentDateView.clone();
+        this.currentDateView = this.currentDateView.clone().subtract(navigateBy, 'year');
+        const to = this.currentDateView.clone();
+        this.onLeftSecondaryNav.emit({ from, to });
+    }
+
+    onRightSecondaryNavClick() {
+        let navigateBy = this.componentConfig.multipleYearsNavigateBy;
+        const isOutsideRange = this.componentConfig.max &&
+            this.componentConfig.max.year() - this.currentDateView.year() < navigateBy;
+
+        if (isOutsideRange) {
+            navigateBy = this.componentConfig.max.year() - this.currentDateView.year();
+        }
+
+        const from = this.currentDateView.clone();
+        this.currentDateView = this.currentDateView.clone().add(navigateBy, 'year');
+        const to = this.currentDateView.clone();
+        this.onRightSecondaryNav.emit({ from, to });
+    }
+
+    onMonthCalendarLeftClick(change: INavEvent) {
+        this.onLeftNav.emit(change);
+    }
+
+    onMonthCalendarRightClick(change: INavEvent) {
+        this.onRightNav.emit(change);
+    }
+
+    onMonthCalendarSecondaryLeftClick(change: INavEvent) {
+        this.onRightNav.emit(change);
+    }
+
+    onMonthCalendarSecondaryRightClick(change: INavEvent) {
+        this.onLeftNav.emit(change);
+    }
+
+    getWeekdayName(weekday: Moment): string {
+        if (this.componentConfig.weekDayFormatter) {
+            return this.componentConfig.weekDayFormatter(weekday.day());
+        }
+
+        return weekday.format(this.componentConfig.weekDayFormat);
+    }
+
+    toggleCalendarMode(mode: ECalendarMode) {
+        if (this.currentCalendarMode !== mode) {
+            this.currentCalendarMode = mode;
+            this.onNavHeaderBtnClick.emit(mode);
+        }
+
+        this.cd.markForCheck();
+    }
+
+    monthSelected(month: IMonth) {
+        this.currentDateView = month.date.clone();
+        this.viewmode = 'day';
+        // this.currentCalendarMode = ECalendarMode.Day;
+        this.onMonthSelect.emit(month);
+    }
+
+    LabelClicked() {
+        let ismonth = this.viewmode === 'month';
+        this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig,
+            this.currentDateView, ismonth ? 'month' : 'year');
+        this.viewmode = ismonth ? 'day' : 'month';
+    }
+
+    TimeViewClicked() {
+        this.viewmode = this.viewmode === 'time' ? 'day' : 'time';
+    }
+
+    moveCalendarsBy(current: Moment, amount: number, granularity: unitOfTime.Base = 'month') {
+        this.currentDateView = current.clone().add(amount, granularity);
+        this.cd.markForCheck();
+    }
+
+    moveCalendarTo(to: SingleCalendarValue) {
+        if (to) {
+            this.currentDateView = this.utilsService.convertToMoment(to, this.componentConfig.format, this.componentConfig.locale);
+        }
+
+        this.cd.markForCheck();
+    }
+
+    shouldShowCurrent(): boolean {
+        return this.utilsService.shouldShowCurrent(
+            this.componentConfig.showGoToCurrent,
+            'day',
+            this.componentConfig.min,
+            this.componentConfig.max
+        );
+    }
+
+    goToCurrent() {
+        this.currentDateView = moment().locale(this.componentConfig.locale);
+        this.onGoToCurrent.emit();
+    }
+    switchLocale() {
+        if (this.viewmode === 'time') this.viewmode = 'day';
+        this.onSwitchLocale.emit();
+    }
+    timeView() {
+        this.toggleCalendarMode(this.CalendarMode.Time);
+        this.onTimeView.emit();
+    }
+    TimeChanged(evt) {
+        this.onTimeChange.emit(evt);
+    }
+
+    handleConfigChange(config: SimpleChange) {
+        if (config) {
+            const prevConf: IDayCalendarConfigInternal = this.dayCalendarService.getConfig(config.previousValue);
+            const currentConf: IDayCalendarConfigInternal = this.dayCalendarService.getConfig(config.currentValue);
+
+            if (this.utilsService.shouldResetCurrentView(prevConf, currentConf)) {
+                this._currentDateView = null;
+            }
+        }
+    }
 }

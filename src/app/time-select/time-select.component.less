@@ -1,40 +1,58 @@
-@import '../common/styles/variables';
+@import "../common/styles/variables";
 
 & {
-
   dp-time-select {
     display: inline-block;
 
-    .dp-time-select-controls {
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      line-height: normal;
+    .dp-time-calendar-container {
       background: @c-white;
     }
 
-    .dp-time-select-control {
-      display: inline-block;
-      //width: 35px;
-      margin: 0 auto;
-      vertical-align: middle;
-      font-size: inherit;
-      letter-spacing: 1px;
+    .dp-time-wrapper {
+      //border: 1px solid @c-black;
+      &.rtl {
+        direction: rtl;
+        .dp-time-select-controls {
+            flex-direction: row-reverse;
+        }
+      }
     }
 
-    .dp-time-select-control-up, .dp-time-select-control-down {
-      position: relative;
-      display: block;
-      width: 24px;
-      height: 24px;
-      margin: 3px auto;
+    .dp-time-select-controls {
+      margin: 42px 0;
+      font-size: 25px;
+      text-align: center;
+      line-height: normal;
+      background: @c-white;
+      display: flex;
+      padding: 0;
+      justify-content: space-evenly;
+      align-items: center;
+    }
+
+    .dp-time-select-control {
+      font-size: inherit;
+      letter-spacing: 1px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      line-height: 3.5;
+    }
+
+    .dp-time-select-control-up,
+    .dp-time-select-control-down {
       cursor: pointer;
-      color:@c-light-gray;.arrow(0deg)
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      position: relative;
+      color: @c-light-gray;
+      .arrow(0deg);
+      margin: 0 auto;
     }
 
     .dp-time-select-control-up::before {
       transform: rotate(-45deg);
-      top: 4px;
     }
 
     .dp-time-select-control-down::before {
@@ -42,20 +60,38 @@
     }
 
     .dp-time-select-separator {
-      width: 5px;
+      width: 8px;
+      font-size: 25px;
+    }
+
+    .dp-time-select-display-hours,
+    .dp-time-select-display-minutes,
+    .dp-time-select-display-seconds,
+    .dp-time-select-display-meridiem {
+      padding: 0 3px;
+      display: inline-block;
     }
 
     &.dp-material {
-      .dp-time-select-control-up, .dp-time-select-control-down {
+      .dp-time-wrapper {
+        min-height: 230px;
+        min-width: 250px;
+        overflow: hidden;
+      }
+
+      .dp-time-select-control-up,
+      .dp-time-select-control-down {
         box-sizing: border-box;
         background: transparent;
         border: none;
         outline: none;
         border-radius: 50%;
 
-        &::before {
-          left: 0;
-        }
+        // &::before {
+        //   left: 0;
+        //   height: 7px;
+        //   width: 7px;
+        // }
 
         &:hover {
           background: @c-light-gray;
