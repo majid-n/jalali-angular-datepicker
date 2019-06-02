@@ -4,7 +4,7 @@ import { UtilsService } from '../common/services/utils/utils.service';
 import { IDayCalendarConfig } from '../day-calendar/day-calendar-config.model';
 import { TimeSelectService } from '../time-select/time-select.service';
 import { ITimeSelectConfig } from '../time-select/time-select-config.model';
-import { CalendarMode } from '../common/types/calendar-mode';
+import { CalendarMode } from '../common/models/calendar.model';
 import { Moment } from 'jalali-moment';
 import * as momentNs from 'jalali-moment';
 const moment = momentNs;

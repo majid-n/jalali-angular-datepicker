@@ -1,14 +1,11 @@
 import debounce from '../../common/decorators/decorators';
 import { IDatePickerConfig } from '../../date-picker/date-picker-config.model';
 import { DatePickerComponent } from '../../date-picker/date-picker.component';
-import { DatePickerDirective } from '../../date-picker/date-picker.directive';
+import { ECalendarValue, INavEvent } from '../../common/models/calendar.model';
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as momentNs from 'jalali-moment';
 import { Moment } from 'jalali-moment';
-import { GaService } from '../services/ga/ga.service';
-import { ECalendarValue } from '../../common/types/calendar-value-enum';
-import { INavEvent } from '../../common/models/navigation-event.model';
 const moment = momentNs;
 
 const GLOBAL_OPTION_KEYS = [
@@ -45,13 +42,6 @@ const DAY_PICKER_DIRECTIVE_OPTION_KEYS = [
 const DAY_PICKER_OPTION_KEYS = [
     ...DAY_PICKER_DIRECTIVE_OPTION_KEYS
 ];
-const DAY_TIME_PICKER_OPTION_KEYS = [
-    'moveCalendarTo',
-    ...PICKER_OPTION_KEYS
-];
-const TIME_PICKER_OPTION_KEYS = [
-    ...PICKER_OPTION_KEYS
-];
 const MONTH_CALENDAR_OPTION_KEYS = [
     'minValidation',
     'maxValidation',
@@ -87,30 +77,6 @@ const DAY_CALENDAR_OPTION_KEYS = [
     'moveCalendarTo',
     ...MONTH_CALENDAR_OPTION_KEYS
 ];
-const TIME_SELECT_SHARED_OPTION_KEYS = [
-    'hours12Format',
-    'hours24Format',
-    'meridiemFormat',
-    'minutesFormat',
-    'minutesInterval',
-    'secondsFormat',
-    'secondsInterval',
-    'showSeconds',
-    'showTwentyFourHours',
-    'timeSeparator',
-    ...GLOBAL_OPTION_KEYS
-];
-const TIME_SELECT_OPTION_KEYS = [
-    'maxTime',
-    'maxTimeValidation',
-    'minTime',
-    'minTimeValidation',
-    ...TIME_SELECT_SHARED_OPTION_KEYS
-];
-const DAY_TIME_CALENDAR_OPTION_KEYS = [
-    ...DAY_CALENDAR_OPTION_KEYS,
-    ...TIME_SELECT_SHARED_OPTION_KEYS
-];
 
 @Component({
     selector: 'dp-demo',
@@ -121,8 +87,6 @@ const DAY_TIME_CALENDAR_OPTION_KEYS = [
 export class DemoComponent {
     showDemo: boolean = true;
     @ViewChild('dateComponent') dateComponent: DatePickerComponent;
-    @ViewChild('donateForm') donateForm: any;
-    @ViewChild('dateDirectivePicker') datePickerDirective: DatePickerDirective;
     demoFormat = 'DD-MM-YYYY';
     readonly DAYS = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
     readonly LANGS = [
@@ -180,11 +144,11 @@ export class DemoComponent {
         datePicker: new FormControl({ value: this.date, disabled: this.disabled }, [
             this.required ? Validators.required : () => undefined,
             control => this.validationMinDate && this.config &&
-                moment(control.value, this.config.format || this.getDefaultFormatByMode(this.pickerMode))
+                moment(control.value, this.config.format || 'DD/MM/YYYY HH:mm')
                     .isBefore(this.validationMinDate)
                 ? { minDate: 'minDate Invalid' } : undefined,
             control => this.validationMaxDate && this.config &&
-                moment(control.value, this.config.format || this.getDefaultFormatByMode(this.pickerMode))
+                moment(control.value, this.config.format || 'DD/MM/YYYY HH:mm')
                     .isAfter(this.validationMaxDate)
                 ? { maxDate: 'maxDate Invalid' } : undefined
         ])
@@ -241,7 +205,7 @@ export class DemoComponent {
     config: IDatePickerConfig = { ...this.gregorianSystemDefaults, ...this.jalaliConfigExtension };
     isAtTop: boolean = true;
 
-    constructor(private gaService: GaService) {
+    constructor() {
     }
 
     @HostListener('document:scroll')
@@ -261,8 +225,6 @@ export class DemoComponent {
         this.config.hideInputContainer = false;
         this.config.inputElementContainer = undefined;
         this.formGroup.get('datePicker').setValue(this.date);
-
-        this.gaService.emitEvent('Navigation', mode);
     }
 
     validatorsChanged() {
@@ -279,11 +241,6 @@ export class DemoComponent {
     configChanged(change: string = 'N/A', value: any = 'N/A') {
         this.config = { ...this.config };
 
-        this.gaService.emitEvent('ConfigChange', change, value);
-        //
-        // if (change === 'locale') {
-        //   this.refreshDemo();
-        // }
         if (change === 'locale') {
             // const defaultCalSys = (this.config.locale === 'fa') ?
             //   {...this.gregorianSystemDefaults, ...this.jalaliConfigExtension} : this.gregorianSystemDefaults;
@@ -297,16 +254,12 @@ export class DemoComponent {
     openCalendar() {
         if (this.dateComponent) {
             this.dateComponent.api.open();
-        } else if (this.datePickerDirective) {
-            this.datePickerDirective.api.open();
         }
     }
 
     closeCalendar() {
         if (this.dateComponent) {
             this.dateComponent.api.close();
-        } else if (this.datePickerDirective) {
-            this.datePickerDirective.api.close();
         }
     }
 
@@ -320,54 +273,10 @@ export class DemoComponent {
 
     isValidConfig(key: string): boolean {
         switch (this.pickerMode) {
-            case 'dayInline':
-                return [
-                    ...DAY_CALENDAR_OPTION_KEYS
-                ].indexOf(key) > -1;
-            case 'monthInline':
-                return [
-                    ...MONTH_CALENDAR_OPTION_KEYS
-                ].indexOf(key) > -1;
-            case 'timeInline':
-                return [
-                    ...TIME_SELECT_OPTION_KEYS
-                ].indexOf(key) > -1;
-            case 'daytimeInline':
-                return [
-                    ...DAY_TIME_CALENDAR_OPTION_KEYS
-                ].indexOf(key) > -1;
             case 'dayPicker':
                 return [
                     ...DAY_PICKER_OPTION_KEYS,
                     ...DAY_CALENDAR_OPTION_KEYS
-                ].indexOf(key) > -1;
-            case 'dayDirective':
-            case 'dayDirectiveReactiveMenu':
-                return [
-                    ...DAY_PICKER_DIRECTIVE_OPTION_KEYS,
-                    ...DAY_CALENDAR_OPTION_KEYS
-                ].indexOf(key) > -1;
-            case 'monthPicker':
-                return [
-                    ...DAY_PICKER_OPTION_KEYS,
-                    ...MONTH_CALENDAR_OPTION_KEYS
-                ].indexOf(key) > -1;
-            case 'monthDirective':
-                return [
-                    ...DAY_PICKER_DIRECTIVE_OPTION_KEYS,
-                    ...MONTH_CALENDAR_OPTION_KEYS
-                ].indexOf(key) > -1;
-            case 'timePicker':
-            case 'timeDirective':
-                return [
-                    ...TIME_PICKER_OPTION_KEYS,
-                    ...TIME_SELECT_OPTION_KEYS
-                ].indexOf(key) > -1;
-            case 'daytimePicker':
-            case 'daytimeDirective':
-                return [
-                    ...DAY_TIME_PICKER_OPTION_KEYS,
-                    ...DAY_TIME_CALENDAR_OPTION_KEYS
                 ].indexOf(key) > -1;
             default:
                 return true;
@@ -376,23 +285,8 @@ export class DemoComponent {
 
     private getDefaultFormatByMode(mode: string): string {
         switch (mode) {
-            case 'daytimePicker':
-            case 'daytimeInline':
-            case 'daytimeDirective':
-                return 'DD-MM-YYYY HH:mm:ss';
             case 'dayPicker':
-            case 'dayInline':
-            case 'dayDirective':
-            case 'dayDirectiveReactiveMenu':
                 return 'DD/MM/YYYY HH:mm';
-            case 'monthPicker':
-            case 'monthInline':
-            case 'monthDirective':
-                return 'MMM, YYYY';
-            case 'timePicker':
-            case 'timeInline':
-            case 'timeDirective':
-                return 'HH:mm:ss';
         }
     }
 
@@ -410,51 +304,5 @@ export class DemoComponent {
 
     moveCalendarTo() {
         this.dateComponent.api.moveCalendarTo(moment('14-01-1987', this.demoFormat));
-    }
-
-    donateClicked() {
-        this.gaService.emitEvent('donate', 'clicked');
-        alert('6104 3377 4540 4952');
-    }
-
-    getGeneratedCode() {
-        const map = {
-            dayPicker: 'dp-date-picker mode="day"',
-            dayInline: 'dp-day-calendar',
-            monthPicker: 'dp-date-picker mode="month"',
-            monthInline: 'dp-month-calendar',
-            timePicker: 'dp-date-picker mode="time"',
-            timeInline: 'dp-time-select',
-            daytimePicker: 'dp-date-picker mode="daytime"',
-            daytimeInline: 'dp-day-time-calendar',
-            daytimeDirective: 'input [dpDayPicker]="config" mode="daytime"',
-            monthDirective: 'input [dpDayPicker]="config" mode="month"',
-            timeDirective: 'input [dpDayPicker]="config" mode="time"',
-            dayDirective: 'input [dpDayPicker]="config"',
-            dayDirectiveReactive: 'input [dpDayPicker]="config"'
-        }
-        let attribs = '';
-        if (this.direction === 'rtl') {
-            attribs += ' dir="rtl"';
-        }
-        if (this.material) {
-            attribs += ' theme="dp-material"';
-        }
-        if (this.placeholder) {
-            attribs += ' placeholder="' + this.placeholder + '"';
-        }
-        if (this.disabled) {
-            attribs += ' disabled="' + this.disabled + '"';
-        }
-        if (this.required) {
-            attribs += ' required="' + this.required + '"';
-        }
-        if (this.validationMinDate) {
-            attribs += ' minDate="' + this.validationMinDate.calendar() + '"';
-        }
-        if (this.validationMaxDate) {
-            attribs += ' maxDate="' + this.validationMaxDate.calendar() + '"';
-        }
-        return '<' + map[this.pickerMode] + attribs + '/>';
     }
 }

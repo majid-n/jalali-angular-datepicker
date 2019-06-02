@@ -1,13 +1,17 @@
 import * as momentNs from 'jalali-moment';
 const moment = momentNs;
-import { IDate } from '../common/models/date.model';
+import {
+    IDate,
+    INavEvent,
+    CalendarMode,
+    DateValidator,
+    ECalendarMode,
+    CalendarValue,
+    ECalendarValue,
+    SingleCalendarValue
+} from '../common/models/calendar.model';
 import { DomHelper } from '../common/services/dom-appender/dom-appender.service';
 import { UtilsService } from '../common/services/utils/utils.service';
-import { CalendarMode } from '../common/types/calendar-mode';
-import { ECalendarMode } from '../common/types/calendar-mode-enum';
-import { CalendarValue } from '../common/types/calendar-value';
-import { ECalendarValue } from '../common/types/calendar-value-enum';
-import { SingleCalendarValue } from '../common/types/single-calendar-value';
 import { IDayCalendarConfig } from '../day-calendar/day-calendar-config.model';
 import { DayCalendarComponent } from '../day-calendar/day-calendar.component';
 import { DayCalendarService } from '../day-calendar/day-calendar.service';
@@ -17,6 +21,8 @@ import { TimeSelectService } from '../time-select/time-select.service';
 import { IDatePickerConfig, IDatePickerConfigInternal } from './date-picker-config.model';
 import { IDpDayPickerApi } from './date-picker.api';
 import { DatePickerService } from './date-picker.service';
+import { Moment, unitOfTime } from 'jalali-moment';
+import { MonthCalendarComponent } from '../month-calendar/month-calendar.component';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -45,10 +51,6 @@ import {
     ValidationErrors,
     Validator
 } from '@angular/forms';
-import { Moment, unitOfTime } from 'jalali-moment';
-import { DateValidator } from '../common/types/validator.type';
-import { MonthCalendarComponent } from '../month-calendar/month-calendar.component';
-import { INavEvent } from '../common/models/navigation-event.model';
 
 @Component({
     selector: 'dp-date-picker',

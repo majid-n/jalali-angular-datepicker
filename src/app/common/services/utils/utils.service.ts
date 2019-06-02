@@ -1,16 +1,17 @@
-import { ECalendarValue } from '../../types/calendar-value-enum';
-import { SingleCalendarValue } from '../../types/single-calendar-value';
+import {
+    CalendarValue,
+    ECalendarValue,
+    IDate,
+    CalendarMode,
+    DateValidator,
+    SingleCalendarValue
+} from '../../models/calendar.model';
 import { Injectable } from '@angular/core';
 import * as momentNs from 'jalali-moment';
-import { Moment, MomentInput, unitOfTime } from 'jalali-moment';
-import { CalendarValue } from '../../types/calendar-value';
-import { IDate } from '../../models/date.model';
-import { CalendarMode } from '../../types/calendar-mode';
-import { DateValidator } from '../../types/validator.type';
+import { Moment, unitOfTime } from 'jalali-moment';
 import { ICalendarInternal } from '../../models/calendar.model';
 import { IMonthCalendarConfig } from '../../..';
 import { IDayCalendarConfigInternal } from '../../../day-calendar/day-calendar-config.model';
-
 const moment = momentNs;
 
 export interface DateLimits {

@@ -1,4 +1,9 @@
-import { ECalendarValue } from '../common/types/calendar-value-enum';
+import {
+    ECalendarValue,
+    CalendarValue,
+    DateValidator,
+    SingleCalendarValue
+} from '../common/models/calendar.model';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -27,10 +32,7 @@ import {
     ValidationErrors,
     Validator
 } from '@angular/forms';
-import { CalendarValue } from '../common/types/calendar-value';
 import { UtilsService } from '../common/services/utils/utils.service';
-import { DateValidator } from '../common/types/validator.type';
-import { SingleCalendarValue } from '../common/types/single-calendar-value';
 const moment = momentNs;
 
 @Component({
@@ -168,7 +170,7 @@ export class MonthCalendarComponent implements OnInit, OnChanges, ControlValueAc
             return () => null;
         }
     }
-    
+
     isFarsi() {
         return this.componentConfig.locale === 'fa';
     }
@@ -197,7 +199,6 @@ export class MonthCalendarComponent implements OnInit, OnChanges, ControlValueAc
         if (month.selected && !this.componentConfig.unSelectOnClick) {
             return;
         }
-
         this.selected = this.utilsService
             .updateSelected(this.componentConfig.allowMultiSelect, this.selected, month, 'month');
         this.yearMonths = this.monthCalendarService

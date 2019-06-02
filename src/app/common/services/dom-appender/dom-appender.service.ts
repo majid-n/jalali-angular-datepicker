@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TDrops, TOpens } from '../../types/poistions.type';
+import { TDrops, TOpens } from '../../models/calendar.model';
 
 @Injectable()
 export class DomHelper {

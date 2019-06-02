@@ -17,10 +17,10 @@
     </button>
 
     <div class="dp-nav-header">
-        <span [hidden]="isLabelClickable"
+        <div [hidden]="isLabelClickable"
             [attr.data-hidden]="isLabelClickable"
             [innerText]="label">
-        </span>
+        </div>
         <button type="button"
                 class="dp-nav-header-btn"
                 [hidden]="!isLabelClickable"

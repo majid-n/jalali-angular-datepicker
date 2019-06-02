@@ -1,5 +1,10 @@
-import { ECalendarValue } from '../common/types/calendar-value-enum';
-import { SingleCalendarValue } from '../common/types/single-calendar-value';
+import {
+    IDate,
+    ECalendarValue,
+    CalendarValue,
+    DateValidator,
+    SingleCalendarValue
+} from '../common/models/calendar.model';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -26,10 +31,7 @@ import {
     ValidationErrors,
     Validator
 } from '@angular/forms';
-import { CalendarValue } from '../common/types/calendar-value';
 import { UtilsService } from '../common/services/utils/utils.service';
-import { IDate } from '../common/models/date.model';
-import { DateValidator } from '../common/types/validator.type';
 const moment = momentNs;
 
 @Component({
@@ -143,6 +145,8 @@ export class TimeSelectComponent implements OnInit, OnChanges, ControlValueAcces
         if (value) {
             const momentValue = this.utilsService
                 .convertToMomentArray(value, this.timeSelectService.getTimeFormat(this.componentConfig), false, this.componentConfig.locale)[0];
+            console.log('here', momentValue);
+
             if (momentValue.isValid()) {
                 this.selected = momentValue;
                 this.inputValueType = this.utilsService

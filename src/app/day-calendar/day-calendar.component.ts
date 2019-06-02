@@ -1,6 +1,11 @@
-import { ECalendarValue } from '../common/types/calendar-value-enum';
-import { SingleCalendarValue } from '../common/types/single-calendar-value';
-import { ECalendarMode } from '../common/types/calendar-mode-enum';
+import {
+    INavEvent,
+    ECalendarMode,
+    ECalendarValue,
+    CalendarValue,
+    DateValidator,
+    SingleCalendarValue
+} from '../common/models/calendar.model';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -29,14 +34,11 @@ import {
     ValidationErrors,
     Validator
 } from '@angular/forms';
-import { CalendarValue } from '../common/types/calendar-value';
 import { UtilsService } from '../common/services/utils/utils.service';
 import { IMonthCalendarConfig } from '../month-calendar/month-calendar-config';
-import { IMonth } from '../month-calendar/month.model';
-import { DateValidator } from '../common/types/validator.type';
-import { INavEvent } from '../common/models/navigation-event.model';
 import { ITimeSelectConfig } from '../time-select/time-select-config.model';
 import { DatePickerService } from '../date-picker/date-picker.service';
+import { IMonth } from '../month-calendar/month.model';
 const moment = momentNs;
 
 @Component({
@@ -147,7 +149,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
 
     init() {
         this.componentConfig = this.dayCalendarService.getConfig(this.config);
-        this.selected = this.selected || [];
+        this.selected = this.selected || [moment()];
         this.currentDateView = this.displayDate
             ? this.utilsService.convertToMoment(this.displayDate, this.componentConfig.format, this.componentConfig.locale).clone()
             : this.utilsService
@@ -354,6 +356,8 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     monthSelected(month: IMonth) {
         this.currentDateView = month.date.clone();
         this.viewmode = 'day';
+        this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig,
+            this.currentDateView, 'month');
         // this.currentCalendarMode = ECalendarMode.Day;
         this.onMonthSelect.emit(month);
     }
@@ -365,10 +369,6 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         this.viewmode = ismonth ? 'day' : 'month';
     }
 
-    TimeViewClicked() {
-        this.viewmode = this.viewmode === 'time' ? 'day' : 'time';
-    }
-
     moveCalendarsBy(current: Moment, amount: number, granularity: unitOfTime.Base = 'month') {
         this.currentDateView = current.clone().add(amount, granularity);
         this.cd.markForCheck();
@@ -376,6 +376,8 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
 
     moveCalendarTo(to: SingleCalendarValue) {
         if (to) {
+            console.log(this.componentConfig);
+            
             this.currentDateView = this.utilsService.convertToMoment(to, this.componentConfig.format, this.componentConfig.locale);
         }
 
@@ -392,7 +394,15 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     }
 
     goToCurrent() {
-        this.currentDateView = moment().locale(this.componentConfig.locale);
+        if (this.viewmode === 'time') {
+            this._selected[0].set({
+                'hour' : moment().hour(),
+                'minute'  : moment().minute(), 
+                'second' : moment().second()
+            });
+            this.selected = this._selected;
+            
+        } else this.currentDateView = moment().locale(this.componentConfig.locale);
         this.onGoToCurrent.emit();
     }
     switchLocale() {
@@ -402,6 +412,9 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     timeView() {
         this.toggleCalendarMode(this.CalendarMode.Time);
         this.onTimeView.emit();
+    }
+    TimeViewClicked() {
+        this.viewmode = this.viewmode === 'time' ? 'day' : 'time';
     }
     TimeChanged(evt) {
         this.onTimeChange.emit(evt);
