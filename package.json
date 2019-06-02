@@ -43,7 +43,7 @@
     "node-sass": "^4.12.0"
   },
   "devDependencies": {
-    "@angular/cli": "^1.6.1",
+    "@angular/cli": "^8.0.1",
     "@angular/common": "^8.0.0",
     "@angular/compiler": "^8.0.0",
     "@angular/compiler-cli": "^8.0.0",
