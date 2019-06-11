@@ -13,7 +13,7 @@ export interface IConfig {
     monthBtnFormatter?: (day: Moment) => string;
     monthBtnCssClassCallback?: (day: Moment) => string;
     multipleYearsNavigateBy?: number;
-    showMultipleYearsNavigation?: boolean;
+    showMultipleYearsNavigation?: 'all' | 'none' | 'month' | 'day';
     locale?: string;
     returnedValueType?: ECalendarValue;
     showGoToCurrent?: boolean;

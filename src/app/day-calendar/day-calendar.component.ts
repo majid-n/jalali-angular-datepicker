@@ -71,10 +71,9 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
 
     @Output() onSelect: EventEmitter<IDay> = new EventEmitter();
     @Output() onMonthSelect: EventEmitter<IMonth> = new EventEmitter();
-    @Output() onNavHeaderBtnClick: EventEmitter<ECalendarMode> = new EventEmitter();
-    @Output() onGoToCurrent: EventEmitter<void> = new EventEmitter();
-    @Output() onSwitchLocale: EventEmitter<void> = new EventEmitter();
-    @Output() onTimeView: EventEmitter<void> = new EventEmitter();
+    @Output() onGoToCurrent: EventEmitter<string> = new EventEmitter();
+    @Output() onSwitchLocale: EventEmitter<string> = new EventEmitter();
+    @Output() onTimeView: EventEmitter<string> = new EventEmitter();
     @Output() onTimeChange: EventEmitter<any> = new EventEmitter();
     @Output() onLeftNav: EventEmitter<INavEvent> = new EventEmitter();
     @Output() onRightNav: EventEmitter<INavEvent> = new EventEmitter();
@@ -95,13 +94,13 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     currentCalendarMode: ECalendarMode = ECalendarMode.Day;
     monthCalendarConfig: IMonthCalendarConfig;
     _shouldShowCurrent: boolean = true;
+    _showSwitchLocale: boolean = true;
+    _showTimeView: boolean = true;
     navLabel: string;
     showLeftNav: boolean;
     showRightNav: boolean;
     showLeftSecondaryNav: boolean;
     showRightSecondaryNav: boolean;
-    _showSwitchLocale: boolean = true;
-    _showTimeView: boolean = true;
     viewmode: string = 'day';
 
     api = {
@@ -127,8 +126,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig, this._currentDateView, ismonth ? 'year' : 'month');
         this.showLeftNav = this.dayCalendarService.shouldShowLeft(this.componentConfig.min, this.currentDateView);
         this.showRightNav = this.dayCalendarService.shouldShowRight(this.componentConfig.max, this.currentDateView);
-        this.showLeftSecondaryNav = this.componentConfig.showMultipleYearsNavigation && this.showLeftNav;
-        this.showRightSecondaryNav = this.componentConfig.showMultipleYearsNavigation && this.showRightNav;
+        this.secondaryNavVisibility();
     }
 
     get currentDateView(): Moment {
@@ -169,8 +167,16 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         this._showSwitchLocale = this.componentConfig.showSwitchLocale && this._showSwitchLocale;
         this._showTimeView = this.componentConfig.showTimeView && this._showTimeView;
     }
+
     isFarsi() {
         return this.componentConfig.locale === 'fa';
+    }
+
+    secondaryNavVisibility() {
+        this.showLeftSecondaryNav = (this.componentConfig.showMultipleYearsNavigation === 'all' ||
+             this.componentConfig.showMultipleYearsNavigation === this.viewmode) && this.showLeftNav;
+        this.showRightSecondaryNav = (this.componentConfig.showMultipleYearsNavigation === 'all' ||
+             this.componentConfig.showMultipleYearsNavigation === this.viewmode) && this.showRightNav;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -320,22 +326,6 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         this.onRightSecondaryNav.emit({ from, to });
     }
 
-    onMonthCalendarLeftClick(change: INavEvent) {
-        this.onLeftNav.emit(change);
-    }
-
-    onMonthCalendarRightClick(change: INavEvent) {
-        this.onRightNav.emit(change);
-    }
-
-    onMonthCalendarSecondaryLeftClick(change: INavEvent) {
-        this.onRightNav.emit(change);
-    }
-
-    onMonthCalendarSecondaryRightClick(change: INavEvent) {
-        this.onLeftNav.emit(change);
-    }
-
     getWeekdayName(weekday: Moment): string {
         if (this.componentConfig.weekDayFormatter) {
             return this.componentConfig.weekDayFormatter(weekday.day());
@@ -347,7 +337,6 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     toggleCalendarMode(mode: ECalendarMode) {
         if (this.currentCalendarMode !== mode) {
             this.currentCalendarMode = mode;
-            this.onNavHeaderBtnClick.emit(mode);
         }
 
         this.cd.markForCheck();
@@ -367,6 +356,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig,
             this.currentDateView, ismonth ? 'month' : 'year');
         this.viewmode = ismonth ? 'day' : 'month';
+        this.secondaryNavVisibility();
     }
 
     moveCalendarsBy(current: Moment, amount: number, granularity: unitOfTime.Base = 'month') {
@@ -376,8 +366,6 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
 
     moveCalendarTo(to: SingleCalendarValue) {
         if (to) {
-            console.log(this.componentConfig);
-            
             this.currentDateView = this.utilsService.convertToMoment(to, this.componentConfig.format, this.componentConfig.locale);
         }
 
@@ -403,18 +391,16 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
             this.selected = this._selected;
             
         } else this.currentDateView = moment().locale(this.componentConfig.locale);
-        this.onGoToCurrent.emit();
+        this.onGoToCurrent.emit(this.viewmode);
     }
     switchLocale() {
         if (this.viewmode === 'time') this.viewmode = 'day';
-        this.onSwitchLocale.emit();
-    }
-    timeView() {
-        this.toggleCalendarMode(this.CalendarMode.Time);
-        this.onTimeView.emit();
+        this.onSwitchLocale.emit(this.componentConfig.locale);
     }
     TimeViewClicked() {
         this.viewmode = this.viewmode === 'time' ? 'day' : 'time';
+        // this.toggleCalendarMode(this.CalendarMode.Time);
+        this.onTimeView.emit(this.viewmode);
     }
     TimeChanged(evt) {
         this.onTimeChange.emit(evt);

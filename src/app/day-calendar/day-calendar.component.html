@@ -3,8 +3,8 @@
     [label]="navLabel"
     [showLeftNav]="showLeftNav"
     [showRightNav]="showRightNav"
-    [showLeftSecondaryNav]="true && viewmode === 'month'"
-    [showRightSecondaryNav]="true && viewmode === 'month'"
+    [showLeftSecondaryNav]="showLeftSecondaryNav"
+    [showRightSecondaryNav]="showRightSecondaryNav"
     [isLabelClickable]="componentConfig.enableMonthSelector"
     [theme]="theme"
     [currentMode]="viewmode"
@@ -21,8 +21,7 @@
             [theme]="theme"
             [config]="monthCalendarConfig"
             [displayDate]="_currentDateView"
-            (onSelect)="monthSelected($event)"
-            (onNavHeaderBtnClick)="toggleCalendarMode(CalendarMode.Day)">
+            (onSelect)="monthSelected($event)">
         </dp-month-calendar>
         
         <div class="dp-calendar-wrapper" [ngClass]="{'dp-hide-near-month': !componentConfig.showNearMonthDays,'rtl':isFarsi()}">

@@ -145,7 +145,6 @@ export class TimeSelectComponent implements OnInit, OnChanges, ControlValueAcces
         if (value) {
             const momentValue = this.utilsService
                 .convertToMomentArray(value, this.timeSelectService.getTimeFormat(this.componentConfig), false, this.componentConfig.locale)[0];
-            console.log('here', momentValue);
 
             if (momentValue.isValid()) {
                 this.selected = momentValue;

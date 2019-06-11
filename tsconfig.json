@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "importHelpers": true,
+    "target": "es2015",
     "outDir": "bin",
     "sourceMap": true,
     "declaration": true,
@@ -15,7 +16,17 @@
     "lib": [
       "es2015",
       "dom"
-    ]
+    ],
+    "module": "esnext",
+    "baseUrl": "./",
+    "paths": {
+      "ngx-jdatepicker": [
+        "dist/ngx-jdatepicker"
+      ],
+      "ngx-jdatepicker/*": [
+        "dist/ngx-jdatepicker/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules",

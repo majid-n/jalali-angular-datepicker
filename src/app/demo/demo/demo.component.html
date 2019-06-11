@@ -14,6 +14,7 @@
                     [disabled]="disabled"
                     [minDate]="validationMinDate"
                     [maxDate]="validationMaxDate"
+                    [displayDate]="displayDate"
                     [required]="required"
                     [placeholder]="placeholder"
                     [config]="config"
@@ -22,9 +23,13 @@
                     (open)="opened()"
                     (close)="closed()"
                     (onChange)="log($event)"
-                    [displayDate]="displayDate"
+                    (onGoToCurrent)="log($event, 'current button clicked')"
+                    (onSwitchLocale)="log($event, 'switch locale clicked')"
+                    (onTimeView)="log($event, 'tive view')"
                     (onLeftNav)="onLeftNav($event)"
-                    (onRightNav)="onRightNav($event)">
+                    (onRightNav)="onRightNav($event)"
+                    (onLeftSecondaryNav)="log($event)"
+                    (onRightSecondaryNav)="log($event)">
                 </dp-date-picker>
                 <div class="dp-validations">
                     <div id="requiredValidation" *ngIf="datePickerModel.errors?.required">required</div>
@@ -881,16 +886,32 @@
                    type="radio"
                    [(ngModel)]="config.showMultipleYearsNavigation"
                    name="showMultipleYearsNavigation"
-                   [value]="true"
-                   (ngModelChange)="configChanged('showMultipleYearsNavigation', 'true')">
+                   [value]="'all'"
+                   (ngModelChange)="configChanged('showMultipleYearsNavigation', 'all')">
           </label>
           <label>Disabled
             <input id="hideMultipleYearsNavigation"
                    type="radio"
                    [(ngModel)]="config.showMultipleYearsNavigation"
                    name="showMultipleYearsNavigation"
-                   [value]="false"
-                   (ngModelChange)="configChanged('showMultipleYearsNavigation', 'false')">
+                   [value]="'none'"
+                   (ngModelChange)="configChanged('showMultipleYearsNavigation', 'none')">
+          </label>
+          <label>Month
+            <input id="monthMultipleYearsNavigation"
+                   type="radio"
+                   [(ngModel)]="config.showMultipleYearsNavigation"
+                   name="showMultipleYearsNavigation"
+                   [value]="'month'"
+                   (ngModelChange)="configChanged('showMultipleYearsNavigation', 'month')">
+          </label>
+          <label>Day
+            <input id="dayMultipleYearsNavigation"
+                   type="radio"
+                   [(ngModel)]="config.showMultipleYearsNavigation"
+                   name="showMultipleYearsNavigation"
+                   [value]="'day'"
+                   (ngModelChange)="configChanged('showMultipleYearsNavigation', 'day')">
           </label>
         </div>
       </div>

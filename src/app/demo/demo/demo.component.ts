@@ -86,7 +86,7 @@ const DAY_CALENDAR_OPTION_KEYS = [
 })
 export class DemoComponent {
     showDemo: boolean = true;
-    @ViewChild('dateComponent') dateComponent: DatePickerComponent;
+    @ViewChild('dateComponent', {static: false}) dateComponent: DatePickerComponent;
     demoFormat = 'DD-MM-YYYY';
     readonly DAYS = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
     readonly LANGS = [
@@ -195,7 +195,7 @@ export class DemoComponent {
         showTwentyFourHours: true,
         timeSeparator: ':',
         multipleYearsNavigateBy: 10,
-        showMultipleYearsNavigation: false,
+        showMultipleYearsNavigation: 'month',
         locale: 'en',
         hideInputContainer: false,
         returnedValueType: ECalendarValue.String,

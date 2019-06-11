@@ -23,13 +23,16 @@
                 [displayDate]="displayDate"
                 [theme]="theme"
                 (onSelect)="dateSelected($event, 'day', true)"
-                (onGoToCurrent)="onGoToCurrent.emit()"
-                (onSwitchLocale)="changeLocale(componentConfig.locale === 'fa' ? 'en' : 'fa')"
-                (onTimeView)="onTimeView.emit()"
-                (onMonthSelect)="dateSelected($event, 'month', true)"
+                (onGoToCurrent)="onGoToCurrent.emit($event)"
+                (onSwitchLocale)="switchLocale($event)"
+                (onTimeView)="onTimeView.emit($event)"
                 (onLeftNav)="onLeftNavClick($event)"
+                (onRightNav)="onRightNavClick($event)"
+                (onLeftSecondaryNav)="onLeftSecondaryNavClick($event)"
+                (onRightSecondaryNav)="onRightSecondaryNavClick($event)"
+                (onMonthSelect)="dateSelected($event, 'month', true)"
                 (onTimeChange)="dateSelected($event, 'second', true)"
-                (onRightNav)="onRightNavClick($event)">
+                >
             </dp-day-calendar>
         </div>
     </div>

@@ -96,15 +96,15 @@ export class DatePickerComponent implements OnChanges,
     @Output() close = new EventEmitter<void>();
     @Output() onChange = new EventEmitter<CalendarValue>();
     @Output() onGoToCurrent: EventEmitter<void> = new EventEmitter();
-    @Output() onSwitchLocale: EventEmitter<void> = new EventEmitter();
-    @Output() onTimeView: EventEmitter<void> = new EventEmitter();
+    @Output() onSwitchLocale: EventEmitter<string> = new EventEmitter();
+    @Output() onTimeView: EventEmitter<string> = new EventEmitter();
     @Output() onLeftNav: EventEmitter<INavEvent> = new EventEmitter();
     @Output() onRightNav: EventEmitter<INavEvent> = new EventEmitter();
+    @Output() onLeftSecondaryNav: EventEmitter<INavEvent> = new EventEmitter();
+    @Output() onRightSecondaryNav: EventEmitter<INavEvent> = new EventEmitter();
 
-    @ViewChild('container') calendarContainer: ElementRef;
-    @ViewChild('dayCalendar') dayCalendarRef: DayCalendarComponent;
-    @ViewChild('monthCalendar') monthCalendarRef: MonthCalendarComponent;
-    @ViewChild('timeSelect') timeSelectRef: TimeSelectComponent;
+    @ViewChild('container', {static: false}) calendarContainer: ElementRef;
+    @ViewChild('dayCalendar', {static: false}) dayCalendarRef: DayCalendarComponent;
 
     componentConfig: IDatePickerConfigInternal;
     dayCalendarConfig: IDayCalendarConfig;
@@ -186,9 +186,9 @@ export class DatePickerComponent implements OnChanges,
             this.dayCalendarRef.moveCalendarTo(date);
         }
 
-        if (this.monthCalendarRef) {
-            this.monthCalendarRef.moveCalendarTo(date);
-        }
+        // if (this.monthCalendarRef) {
+        //     this.monthCalendarRef.moveCalendarTo(date);
+        // }
     }
 
     constructor(private readonly dayPickerService: DatePickerService,
@@ -391,9 +391,9 @@ export class DatePickerComponent implements OnChanges,
         this.hideStateHelper = true;
         this.areCalendarsShown = true;
 
-        if (this.timeSelectRef) {
-            this.timeSelectRef.api.triggerChange();
-        }
+        // if (this.timeSelectRef) {
+        //     this.timeSelectRef.api.triggerChange();
+        // }
 
         this.open.emit();
         this.cd.markForCheck();
@@ -465,9 +465,15 @@ export class DatePickerComponent implements OnChanges,
     onLeftNavClick(change: INavEvent) {
         this.onLeftNav.emit(change);
     }
-
     onRightNavClick(change: INavEvent) {
         this.onRightNav.emit(change);
+    }
+
+    onLeftSecondaryNavClick(change) {
+        this.onLeftSecondaryNav.emit(change);
+    }
+    onRightSecondaryNavClick(change) {
+        this.onRightSecondaryNav.emit(change);
     }
 
     startGlobalListeners() {
@@ -484,10 +490,14 @@ export class DatePickerComponent implements OnChanges,
         );
     }
 
+    switchLocale(event) {
+        this.changeLocale(this.componentConfig.locale === 'fa' ? 'en' : 'fa');
+        this.onSwitchLocale.emit(this.componentConfig.locale);
+    }
+
     changeLocale(locale) {
         this.dayCalendarConfig = { ...this.dayCalendarConfig, ...{ locale } };
         this.componentConfig.locale = locale;
-        this.onSwitchLocale.emit();
     }
 
     stopGlobalListeners() {
