@@ -21,16 +21,16 @@ Read this in other languages: [فارسی](./README.fa.md)
 
 1. Download from npm:
    `npm install ngx-jdatepicker --save`
-2. import the `DpDatePickerModule` module in typescript (.ts) or es6 files like below:  
-   `import {DpDatePickerModule} from 'ng2-jalali-date-picker';`
-3. Add `DpDatePickerModule` to your module imports:
+2. import the `NgxJDatePickerModule` module in typescript (.ts) or es6 files like below:  
+   `import {NgxJDatePickerModule} from 'ng2-jalali-date-picker';`
+3. Add `NgxJDatePickerModule` to your module imports:
 
 ```ts
  @NgModule({
    ...
    imports: [
      ...
-     DpDatePickerModule
+     NgxJDatePickerModule
    ]
  })
 ```
@@ -38,14 +38,14 @@ Read this in other languages: [فارسی](./README.fa.md)
 ## How to use
 
 ```html
-<dp-date-picker
+<ngx-jdatepicker
   dir="rtl"
   [(ngModel)]="dateObject"
   mode="day"
   placeholder="تاریخ"
   theme="dp-material"
 >
-</dp-date-picker>
+</ngx-jdatepicker>
 ```
 
 ```ts
@@ -77,12 +77,12 @@ all attributes in the following table could be used as
 
 ```html
 // a future selector
-<dp-date-picker
+<ngx-jdatepicker
   mode="day"
   placeholder="تاریخ"
   [minDate]="moment()"
   [(ngModel)]="selectedDate"
-></dp-date-picker>
+></ngx-jdatepicker>
 ```
 
 | Name        |                Type                 |   Default    |      Applies To       | Description                                                                                                                                                                                                                                        |
@@ -118,13 +118,13 @@ all attributes in the following table could be used as
 
 ### Configuration:
 
-In order to provide configurations to the date-picker you need to pass it to the `dp-date-picker` component:
+In order to provide configurations to the date-picker you need to pass it to the `ngx-jdatepicker` component:
 
 ```html
-<dp-date-picker
+<ngx-jdatepicker
   [(ngModel)]="selectedDate"
   [config]="datePickerConfig"
-></dp-date-picker>
+></ngx-jdatepicker>
 ```
 
 ```ts
@@ -202,7 +202,7 @@ selector: 'my-container',
 template: `
 <div>
     <h1>Container</h1>
-    <dp-date-picker #dayPicker></dp-date-picker>
+    <ngx-jdatepicker #dayPicker></ngx-jdatepicker>
     <button (click)="open()"></button>
     <button (click)="close()"></button>
 </div>

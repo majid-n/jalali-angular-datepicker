@@ -198,6 +198,7 @@ export class DemoComponent {
         showMultipleYearsNavigation: 'month',
         locale: 'en',
         hideInputContainer: false,
+        inputClasses: '',
         returnedValueType: ECalendarValue.String,
         unSelectOnClick: true,
         hideOnOutsideClick: true

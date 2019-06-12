@@ -16,13 +16,11 @@ import { IDayCalendarConfig } from '../day-calendar/day-calendar-config.model';
 import { DayCalendarComponent } from '../day-calendar/day-calendar.component';
 import { DayCalendarService } from '../day-calendar/day-calendar.service';
 import { ITimeSelectConfig } from '../time-select/time-select-config.model';
-import { TimeSelectComponent } from '../time-select/time-select.component';
 import { TimeSelectService } from '../time-select/time-select.service';
 import { IDatePickerConfig, IDatePickerConfigInternal } from './date-picker-config.model';
 import { IDpDayPickerApi } from './date-picker.api';
 import { DatePickerService } from './date-picker.service';
 import { Moment, unitOfTime } from 'jalali-moment';
-import { MonthCalendarComponent } from '../month-calendar/month-calendar.component';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -53,7 +51,7 @@ import {
 } from '@angular/forms';
 
 @Component({
-    selector: 'dp-date-picker',
+    selector: 'ngx-jdatepicker',
     templateUrl: 'date-picker.component.html',
     styleUrls: ['date-picker.component.less'],
     encapsulation: ViewEncapsulation.None,

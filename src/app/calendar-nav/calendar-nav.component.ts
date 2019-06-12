@@ -17,6 +17,7 @@ import {
 })
 export class CalendarNavComponent {
     @Input() label: string;
+    @Input() rtl: boolean;
     @Input() currentMode: string;
     @Input() isLabelClickable: boolean = false;
     @Input() showLeftNav: boolean = true;

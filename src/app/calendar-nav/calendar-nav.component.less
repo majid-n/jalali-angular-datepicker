@@ -8,7 +8,9 @@
             position: relative;
             box-sizing: border-box;
             height: @navHeight;
+            flex-direction: row-reverse;
             border-bottom: 1px solid #e0e0e0 !important;
+            &.rtl { flex-direction: row; }
         }
 
         .dp-showtime {

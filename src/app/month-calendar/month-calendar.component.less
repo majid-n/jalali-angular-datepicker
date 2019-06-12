@@ -40,7 +40,7 @@
 
       .dp-months-row {
         display: flex;
-        justify-content: space-between;    
+        justify-content: space-between;
       }
 
       .dp-calendar-wrapper {
@@ -57,7 +57,7 @@
         transition: border-radius 0.1s ease;
         border: none;
         outline: none;
-        font-size: .7rem;
+        font-size: 0.7rem;
         margin: 7px 0;
 
         &:hover {
@@ -81,5 +81,22 @@
         padding: 0;
       }
     }
+  }
+}
+
+.fadeIn {
+  animation: "fade-in" 0.8s ease forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    -webkit-transform: translateZ(80px);
+    transform: translateZ(80px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    opacity: 1;
   }
 }

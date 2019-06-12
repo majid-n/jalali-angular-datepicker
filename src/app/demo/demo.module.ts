@@ -5,14 +5,14 @@ import { DemoComponent } from './demo/demo.component';
 import { DemoRootComponent } from './demo-root.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DpDatePickerModule } from '../date-picker.module';
+import { NgxJDatePickerModule } from '../date-picker.module';
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        DpDatePickerModule,
+        NgxJDatePickerModule,
         RouterModule.forRoot([
             {
                 path: '**',

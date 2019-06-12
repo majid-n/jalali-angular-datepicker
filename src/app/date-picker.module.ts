@@ -41,5 +41,5 @@ export { MonthCalendarComponent } from './month-calendar/month-calendar.componen
         TimeSelectComponent
     ]
 })
-export class DpDatePickerModule {
+export class NgxJDatePickerModule {
 }

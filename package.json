@@ -1,7 +1,7 @@
 {
     "name": "ngx-jdatepicker",
     "author": "MajiD Noorali",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "license": "MIT",
     "main": "index.js",
     "scripts": {
@@ -39,9 +39,11 @@
         "farsi"
     ],
     "dependencies": {
-        "jalali-moment": "^3.2.3",
-        "node-sass": "^4.12.0",
         "tslib": "^1.9.0"
+    },
+    "peerDependencies": {
+        "node-sass": "^4.12.0",
+        "jalali-moment": "^3.2.3"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "~0.800.0",

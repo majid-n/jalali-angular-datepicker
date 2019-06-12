@@ -125,10 +125,6 @@ export class DatePickerService {
                 return dateFormat;
             case 'daytime':
                 return dateFormat + ' ' + timeFormat;
-            case 'time':
-                return timeFormat;
-            case 'month':
-                return monthFormat;
         }
     }
 }
