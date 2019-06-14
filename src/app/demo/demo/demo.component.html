@@ -10,7 +10,7 @@
                     #dateComponent
                     #datePickerModel="ngModel"
                     [dir]="direction"
-                    [mode]="'day'"
+                    [mode]="calendarMode"
                     [disabled]="disabled"
                     [minDate]="validationMinDate"
                     [maxDate]="validationMaxDate"
@@ -45,6 +45,26 @@
     <div class="dp-page-content">
         <div class="dp-attributes">
             <h3 class="dp-options-section">Attribute options</h3>
+            <div class="dp-option">
+                <span class="dp-option-header">
+                    Calendar Mode (day | daytime | time | month):
+                </span>
+                <div class="dp-option-playground">
+                    <label>day
+                        <input type="radio" (change)="calendarModeChanged('day')" name="calmode" checked>
+                    </label>
+                    <label>daytime
+                        <input type="radio" (change)="calendarModeChanged('daytime')" name="calmode">
+                    </label>
+                    <label>time
+                        <input type="radio" (change)="calendarModeChanged('time')" name="calmode">
+                    </label>
+                    <label>month
+                        <input type="radio" (change)="calendarModeChanged('month')" name="calmode">
+                    </label>
+                </div>
+            </div>
+
             <div class="dp-option" *ngIf="isValidConfig('theme')">
                 <span class="dp-option-header">
                     Theme (theme | for example the built in material theme - dp-material):

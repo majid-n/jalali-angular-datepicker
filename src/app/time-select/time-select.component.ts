@@ -62,6 +62,7 @@ export class TimeSelectComponent implements OnInit, OnChanges, ControlValueAcces
     @Input() maxDate: SingleCalendarValue;
     @Input() minTime: SingleCalendarValue;
     @Input() maxTime: SingleCalendarValue;
+    @Input() inline: boolean = false;
     @HostBinding('class') @Input() theme: string;
 
     @Output() onChange: EventEmitter<IDate> = new EventEmitter();

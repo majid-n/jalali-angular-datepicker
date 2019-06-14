@@ -1,5 +1,5 @@
 import { Moment } from 'jalali-moment';
-import { ICalendar, ICalendarInternal } from '../common/models/calendar.model';
+import { ICalendar, ICalendarInternal, ECalendarMode } from '../common/models/calendar.model';
 import { ECalendarValue } from '../common/models/calendar.model';
 
 export interface IConfig {
@@ -13,7 +13,7 @@ export interface IConfig {
     monthBtnFormatter?: (day: Moment) => string;
     monthBtnCssClassCallback?: (day: Moment) => string;
     multipleYearsNavigateBy?: number;
-    showMultipleYearsNavigation?: 'all' | 'none' | 'month' | 'day';
+    showMultipleYearsNavigation?: 'all' | 'none' | ECalendarMode;
     locale?: string;
     returnedValueType?: ECalendarValue;
     showGoToCurrent?: boolean;

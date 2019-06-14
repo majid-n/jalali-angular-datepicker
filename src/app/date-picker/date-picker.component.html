@@ -17,12 +17,13 @@
             [attr.data-hidden]="!_areCalendarsShown">
             <dp-day-calendar
                 #dayCalendar
-                *ngIf="mode === 'day'"
                 [config]="dayCalendarConfig"
                 [ngModel]="_selected"
                 [displayDate]="displayDate"
+                [mode]="_mode"
                 [theme]="theme"
                 [ngClass]="{'dp-gregorian': this.componentConfig.locale === 'en'}"
+                (onModeChange)="modeChange($event)"
                 (onSelect)="dateSelected($event, 'day', true)"
                 (onGoToCurrent)="onGoToCurrent.emit($event)"
                 (onSwitchLocale)="switchLocale($event)"
@@ -31,8 +32,8 @@
                 (onRightNav)="onRightNavClick($event)"
                 (onLeftSecondaryNav)="onLeftSecondaryNavClick($event)"
                 (onRightSecondaryNav)="onRightSecondaryNavClick($event)"
-                (onMonthSelect)="dateSelected($event, 'month', true)"
-                (onTimeChange)="dateSelected($event, 'second', true)"
+                (onMonthSelect)="dateSelected($event, 'month')"
+                (onTimeChange)="dateSelected($event, 'second')"
                 >
             </dp-day-calendar>
         </div>

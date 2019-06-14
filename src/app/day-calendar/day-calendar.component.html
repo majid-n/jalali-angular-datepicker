@@ -1,5 +1,4 @@
 <dp-calendar-nav
-    *ngIf="currentCalendarMode ===  CalendarMode.Day"
     [label]="navLabel"
     [showLeftNav]="showLeftNav"
     [showRightNav]="showRightNav"
@@ -8,7 +7,7 @@
     [isLabelClickable]="componentConfig.enableMonthSelector"
     [theme]="theme"
     [rtl]="isFarsi()"
-    [currentMode]="viewmode"
+    [currentMode]="CalendarMode.Day"
     (onLeftNav)="onNavClick('left')"
     (onRightNav)="onNavClick('right')"
     (onLeftSecondaryNav)="onLeftSecondaryNavClick()"
@@ -16,12 +15,13 @@
     (onLabelClick)="LabelClicked()">
 </dp-calendar-nav>
 
-<div class="dp-day-calendar-container" *ngIf="currentCalendarMode ===  CalendarMode.Day">
+<div class="dp-day-calendar-container">
     <div class="main-wrapper" [ngClass]="{
         'rtl': isFarsi(),
-        'day': viewmode === 'day',
-        'month': viewmode === 'month',
-        'time': viewmode === 'time'}">
+        'day': currentCalendarMode === CalendarMode.Day,
+        'month': currentCalendarMode === CalendarMode.Month,
+        'time': currentCalendarMode === CalendarMode.Time,
+        'daytime': currentCalendarMode === CalendarMode.DayTime}">
         <dp-month-calendar
             [theme]="theme"
             [config]="monthCalendarConfig"
@@ -29,7 +29,7 @@
             (onSelect)="monthSelected($event)">
         </dp-month-calendar>
         
-        <div class="dp-calendar-wrapper" [ngClass]="{'dp-hide-near-month': !componentConfig.showNearMonthDays}">
+        <div class="dp-calendar-wrapper" [ngClass]="{'dp-hide-near-month': !componentConfig.showNearMonthDays, 'rtl': isFarsi()}">
             <div class="dp-weekdays">
                 <span class="dp-calendar-weekday" *ngFor="let weekday of weekdays" [innerText]="getWeekdayName(weekday)"></span>
             </div>
@@ -51,6 +51,13 @@
                     [innerText]="getDayBtnText(day)">
                 </button>
             </div>
+            <!-- <dp-time-select
+                [theme]="theme"
+                [inline]="true"
+                [config]="timeSelectConfig"
+                [ngModel]="_selected && _selected[0]"
+                (onChange)="TimeChanged($event)">
+            </dp-time-select> -->
         </div>
 
         <dp-time-select
@@ -69,7 +76,7 @@
     [showGoToCurrent]="_shouldShowCurrent"
     [theme]="theme"
     [currentLocale]="componentConfig.locale"
-    [currentMode]="viewmode"
+    [currentMode]="CalendarMode.Day"
     (onSwitchLocale)="switchLocale()"
     (onTimeView)="TimeViewClicked()"
     (onGoToCurrent)="goToCurrent()">

@@ -1,7 +1,7 @@
 import debounce from '../../common/decorators/decorators';
 import { IDatePickerConfig } from '../../date-picker/date-picker-config.model';
 import { DatePickerComponent } from '../../date-picker/date-picker.component';
-import { ECalendarValue, INavEvent } from '../../common/models/calendar.model';
+import { ECalendarValue, INavEvent, ECalendarMode, CalendarMode } from '../../common/models/calendar.model';
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as momentNs from 'jalali-moment';
@@ -105,6 +105,7 @@ export class DemoComponent {
     ];
     pickerMode = 'dayPicker';
 
+    calendarMode: CalendarMode = 'day';
     direction: string = 'ltr';
     date: Moment;
     dates: Moment[] = [];
@@ -168,7 +169,7 @@ export class DemoComponent {
         monthFormat: 'MMM, YYYY',
         disableKeypress: false,
         allowMultiSelect: false,
-        closeOnSelect: undefined,
+        closeOnSelect: true,
         closeOnSelectDelay: 100,
         openOnFocus: true,
         openOnClick: true,
@@ -195,7 +196,7 @@ export class DemoComponent {
         showTwentyFourHours: true,
         timeSeparator: ':',
         multipleYearsNavigateBy: 10,
-        showMultipleYearsNavigation: 'month',
+        showMultipleYearsNavigation: ECalendarMode.Month,
         locale: 'en',
         hideInputContainer: false,
         inputClasses: '',
@@ -226,6 +227,10 @@ export class DemoComponent {
         this.config.hideInputContainer = false;
         this.config.inputElementContainer = undefined;
         this.formGroup.get('datePicker').setValue(this.date);
+    }
+
+    calendarModeChanged(mode: CalendarMode) {
+        this.calendarMode = mode;
     }
 
     validatorsChanged() {

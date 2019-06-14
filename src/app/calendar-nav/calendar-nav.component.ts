@@ -7,6 +7,7 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
+import { ECalendarMode } from '../common/models/calendar.model';
 
 @Component({
     selector: 'dp-calendar-nav',
@@ -18,7 +19,7 @@ import {
 export class CalendarNavComponent {
     @Input() label: string;
     @Input() rtl: boolean;
-    @Input() currentMode: string;
+    @Input() currentMode: ECalendarMode;
     @Input() isLabelClickable: boolean = false;
     @Input() showLeftNav: boolean = true;
     @Input() showLeftSecondaryNav: boolean = false;
@@ -53,7 +54,7 @@ export class CalendarNavComponent {
     }
 
     labelClicked() {
-        this.currentMode = this.currentMode === 'month' ? 'day' : 'month';
+        this.currentMode = this.currentMode === ECalendarMode.Month ? ECalendarMode.Day : ECalendarMode.Month;
         this.onLabelClick.emit();
     }
 }

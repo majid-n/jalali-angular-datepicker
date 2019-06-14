@@ -1,4 +1,4 @@
-import { ICalendar, ICalendarInternal } from '../common/models/calendar.model';
+import { ICalendar, ICalendarInternal, ECalendarMode } from '../common/models/calendar.model';
 import { WeekDays, ECalendarValue } from '../common/models/calendar.model';
 import { Moment } from 'jalali-moment';
 
@@ -24,7 +24,7 @@ export interface IConfig {
     monthBtnFormatter?: (day: Moment) => string;
     monthBtnCssClassCallback?: (day: Moment) => string;
     multipleYearsNavigateBy?: number;
-    showMultipleYearsNavigation?: 'all' | 'none' | 'month' | 'day';
+    showMultipleYearsNavigation?: 'all' | 'none' | ECalendarMode;
     returnedValueType?: ECalendarValue;
     showGoToCurrent?: boolean;
     showSwitchLocale?: boolean;

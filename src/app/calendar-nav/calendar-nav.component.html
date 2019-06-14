@@ -1,6 +1,8 @@
 <div class="dp-calendar-nav-container" [ngClass]="{
     theme: theme,
     'rtl': rtl,
+    'no-left-nav': !showLeftNav,
+    'no-right-nav': !showRightNav,
     'has-secondary-left': showLeftSecondaryNav,
     'has-secondary-right': showRightSecondaryNav}">
     <button type="button"

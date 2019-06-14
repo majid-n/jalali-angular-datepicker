@@ -80,7 +80,7 @@ export class DatePickerComponent implements OnChanges,
     OnDestroy {
     isInitialized: boolean = false;
     @Input() config: IDatePickerConfig;
-    @Input() mode: CalendarMode = 'day';
+    @Input() mode: CalendarMode;
     @Input() placeholder: string = '';
     @Input() disabled: boolean = false;
     @Input() displayDate: SingleCalendarValue;
@@ -93,9 +93,9 @@ export class DatePickerComponent implements OnChanges,
     @Output() open = new EventEmitter<void>();
     @Output() close = new EventEmitter<void>();
     @Output() onChange = new EventEmitter<CalendarValue>();
-    @Output() onGoToCurrent: EventEmitter<void> = new EventEmitter();
+    @Output() onGoToCurrent: EventEmitter<ECalendarMode> = new EventEmitter();
     @Output() onSwitchLocale: EventEmitter<string> = new EventEmitter();
-    @Output() onTimeView: EventEmitter<string> = new EventEmitter();
+    @Output() onTimeView: EventEmitter<ECalendarMode> = new EventEmitter();
     @Output() onLeftNav: EventEmitter<INavEvent> = new EventEmitter();
     @Output() onRightNav: EventEmitter<INavEvent> = new EventEmitter();
     @Output() onLeftSecondaryNav: EventEmitter<INavEvent> = new EventEmitter();
@@ -104,11 +104,13 @@ export class DatePickerComponent implements OnChanges,
     @ViewChild('container', {static: false}) calendarContainer: ElementRef;
     @ViewChild('dayCalendar', {static: false}) dayCalendarRef: DayCalendarComponent;
 
+    CalendarMode: ECalendarMode;
     componentConfig: IDatePickerConfigInternal;
     dayCalendarConfig: IDayCalendarConfig;
     timeSelectConfig: ITimeSelectConfig;
     _areCalendarsShown: boolean = false;
     hideStateHelper: boolean = false;
+    _mode: CalendarMode = 'day';
     _selected: Moment[] = [];
     inputValue: CalendarValue;
     inputValueType: ECalendarValue;
@@ -287,7 +289,7 @@ export class DatePickerComponent implements OnChanges,
                 maxDate: this.maxDate,
                 minTime: this.minTime,
                 maxTime: this.maxTime
-            }, this.componentConfig.format, this.mode, this.componentConfig.locale);
+            }, this.componentConfig.format, this._mode, this.componentConfig.locale);
         this.onChangeCallback(this.processOnChangeCallback(this.selected), false);
     }
 
@@ -352,7 +354,7 @@ export class DatePickerComponent implements OnChanges,
     }
 
     init() {
-        this.componentConfig = this.dayPickerService.getConfig(this.config, this.mode);
+        this.componentConfig = this.dayPickerService.getConfig(this.config, this._mode);
         this.currentDateView = this.displayDate
             ? this.utilsService.convertToMoment(this.displayDate, this.componentConfig.format, this.componentConfig.locale).clone()
             : this.utilsService
@@ -366,6 +368,7 @@ export class DatePickerComponent implements OnChanges,
         this.inputValueType = this.utilsService.getInputType(this.inputValue, this.componentConfig.allowMultiSelect);
         this.dayCalendarConfig = this.dayPickerService.getDayConfigService(this.componentConfig);
         this.timeSelectConfig = this.dayPickerService.getTimeConfigService(this.componentConfig);
+        this._mode = this.mode;
     }
 
     inputFocused() {
@@ -398,11 +401,11 @@ export class DatePickerComponent implements OnChanges,
     }
 
     hideCalendar() {
+        this.hideStateHelper = false;
         this.areCalendarsShown = false;
-
-        if (this.dayCalendarRef) {
-            this.dayCalendarRef.api.toggleCalendarMode(ECalendarMode.Day);
-        }
+        // if (this.dayCalendarRef) {
+        //     this.dayCalendarRef.api.toggleCalendarMode(ECalendarMode.Day);
+        // }
 
         this.close.emit();
         this.cd.markForCheck();
@@ -432,12 +435,19 @@ export class DatePickerComponent implements OnChanges,
         }
     }
 
-    dateSelected(date: IDate, granularity: unitOfTime.Base, ignoreClose?: boolean) {
+    dateSelected(date: IDate, granularity: unitOfTime.Base, close: boolean = false) {
         this.selected = this.utilsService
             .updateSelected(this.componentConfig.allowMultiSelect, this.selected, date, granularity);
-        if (!ignoreClose) {
+        if (close && this.onViewDateChange) {
             this.onDateClick();
         }
+        // console.log(this._mode);
+        
+        // if (close) this.hideCalendar();
+    }
+
+    modeChange(mode: CalendarMode) {
+        this._mode = mode;
     }
 
     onDateClick() {

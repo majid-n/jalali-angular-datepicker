@@ -6,9 +6,14 @@
 
     .dp-month-calendar-container {
       background: @c-white;
+      width: @main-width;
+      height: @main-height;
     }
 
     .dp-calendar-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
       //border: 1px solid @c-black;
       &.rtl {
         direction: rtl;
@@ -45,9 +50,8 @@
 
       .dp-calendar-wrapper {
         padding: 10px;
-        min-height: 230px;
-        min-width: 250px;
-        //border: 1px solid @c-light-gray;
+        // min-height: 230px;
+        // min-width: 250px;
       }
 
       .dp-calendar-month {

@@ -4,7 +4,8 @@ import {
     ECalendarValue,
     CalendarValue,
     DateValidator,
-    SingleCalendarValue
+    SingleCalendarValue,
+    CalendarMode
 } from '../common/models/calendar.model';
 import {
     ChangeDetectionStrategy,
@@ -65,15 +66,17 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
 
     @Input() config: IDayCalendarConfig;
     @Input() displayDate: SingleCalendarValue;
+    @Input() mode: CalendarMode;
     @Input() minDate: Moment;
     @Input() maxDate: Moment;
     @HostBinding('class') @Input() theme: string;
 
+    @Output() onModeChange: EventEmitter<CalendarMode> = new EventEmitter();
     @Output() onSelect: EventEmitter<IDay> = new EventEmitter();
     @Output() onMonthSelect: EventEmitter<IMonth> = new EventEmitter();
-    @Output() onGoToCurrent: EventEmitter<string> = new EventEmitter();
+    @Output() onGoToCurrent: EventEmitter<ECalendarMode> = new EventEmitter();
     @Output() onSwitchLocale: EventEmitter<string> = new EventEmitter();
-    @Output() onTimeView: EventEmitter<string> = new EventEmitter();
+    @Output() onTimeView: EventEmitter<ECalendarMode> = new EventEmitter();
     @Output() onTimeChange: EventEmitter<any> = new EventEmitter();
     @Output() onLeftNav: EventEmitter<INavEvent> = new EventEmitter();
     @Output() onRightNav: EventEmitter<INavEvent> = new EventEmitter();
@@ -91,7 +94,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     inputValue: CalendarValue;
     inputValueType: ECalendarValue;
     validateFn: DateValidator;
-    currentCalendarMode: ECalendarMode = ECalendarMode.Day;
+    currentCalendarMode: ECalendarMode;
     monthCalendarConfig: IMonthCalendarConfig;
     _shouldShowCurrent: boolean = true;
     _showSwitchLocale: boolean = true;
@@ -101,7 +104,6 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     showRightNav: boolean;
     showLeftSecondaryNav: boolean;
     showRightSecondaryNav: boolean;
-    viewmode: string = 'day';
 
     api = {
         moveCalendarsBy: this.moveCalendarsBy.bind(this),
@@ -119,7 +121,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     }
 
     set currentDateView(current: Moment) {
-        let ismonth = this.viewmode === 'month';
+        let ismonth = this.currentCalendarMode === this.CalendarMode.Month;
         this._currentDateView = current.clone();
         this.weeks = this.dayCalendarService
             .generateMonthArray(this.componentConfig, this._currentDateView, this.selected);
@@ -166,17 +168,41 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         this._shouldShowCurrent = this.shouldShowCurrent();
         this._showSwitchLocale = this.componentConfig.showSwitchLocale && this._showSwitchLocale;
         this._showTimeView = this.componentConfig.showTimeView && this._showTimeView;
+        this.toggleCalendarMode(this.modeToEcalendarMode(this.mode));
+        this.secondaryNavVisibility();
     }
 
     isFarsi() {
         return this.componentConfig.locale === 'fa';
     }
 
+    modeToEcalendarMode(mode: CalendarMode): ECalendarMode {
+        let _result: ECalendarMode;
+        switch (mode) {
+            case 'day': _result = ECalendarMode.Day; break;
+            case 'daytime': _result = ECalendarMode.DayTime; break;
+            case 'month': _result = ECalendarMode.Month; break;
+            case 'time': _result = ECalendarMode.Time; break;
+        }
+        return _result;
+    }
+    
+    ecalendarModeToMode(mode: ECalendarMode): CalendarMode {
+        let _result: CalendarMode;
+        switch (mode) {
+            case ECalendarMode.Day: _result = 'day'; break;
+            case ECalendarMode.DayTime: _result = 'daytime'; break;
+            case ECalendarMode.Month: _result = 'month'; break;
+            case ECalendarMode.Time: _result = 'time'; break;
+        }
+        return _result;
+    }
+
     secondaryNavVisibility() {
         this.showLeftSecondaryNav = (this.componentConfig.showMultipleYearsNavigation === 'all' ||
-             this.componentConfig.showMultipleYearsNavigation === this.viewmode) && this.showLeftNav;
+             this.componentConfig.showMultipleYearsNavigation === this.currentCalendarMode) && this.showLeftNav;
         this.showRightSecondaryNav = (this.componentConfig.showMultipleYearsNavigation === 'all' ||
-             this.componentConfig.showMultipleYearsNavigation === this.viewmode) && this.showRightNav;
+             this.componentConfig.showMultipleYearsNavigation === this.currentCalendarMode) && this.showRightNav;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -290,7 +316,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     onNavClick(side: string) {
         let _side = side.charAt(0).toUpperCase() + side.slice(1).toLowerCase();
         const from = this.currentDateView.clone();
-        const isday = this.viewmode === 'day';
+        const isday = this.currentCalendarMode === ECalendarMode.Day;
         this.moveCalendarsBy(this.currentDateView, _side === 'Left' ? -1 : 1, isday ? 'month' : 'year');
         const to = this.currentDateView.clone();
         this[`on${_side}Nav`].emit({ from, to });
@@ -334,28 +360,19 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         return weekday.format(this.componentConfig.weekDayFormat);
     }
 
-    toggleCalendarMode(mode: ECalendarMode) {
-        if (this.currentCalendarMode !== mode) {
-            this.currentCalendarMode = mode;
-        }
-
-        this.cd.markForCheck();
-    }
-
     monthSelected(month: IMonth) {
         this.currentDateView = month.date.clone();
-        this.viewmode = 'day';
         this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig,
-            this.currentDateView, 'month');
-        // this.currentCalendarMode = ECalendarMode.Day;
+        this.currentDateView, 'month');
         this.onMonthSelect.emit(month);
+        this.toggleCalendarMode(ECalendarMode.Day);
     }
 
     LabelClicked() {
-        let ismonth = this.viewmode === 'month';
+        let ismonth = this.currentCalendarMode === ECalendarMode.Month;
         this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig,
             this.currentDateView, ismonth ? 'month' : 'year');
-        this.viewmode = ismonth ? 'day' : 'month';
+            this.toggleCalendarMode(ismonth ? ECalendarMode.Day : ECalendarMode.Month);
         this.secondaryNavVisibility();
     }
 
@@ -382,7 +399,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     }
 
     goToCurrent() {
-        if (this.viewmode === 'time') {
+        if (this.currentCalendarMode === ECalendarMode.Time) {
             this._selected[0].set({
                 'hour' : moment().hour(),
                 'minute'  : moment().minute(), 
@@ -391,17 +408,29 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
             this.selected = this._selected;
             
         } else this.currentDateView = moment().locale(this.componentConfig.locale);
-        this.onGoToCurrent.emit(this.viewmode);
+        this.onGoToCurrent.emit(this.currentCalendarMode);
     }
+
     switchLocale() {
-        if (this.viewmode === 'time') this.viewmode = 'day';
+        if (this.currentCalendarMode === ECalendarMode.Time) this.currentCalendarMode = ECalendarMode.Day;
         this.onSwitchLocale.emit(this.componentConfig.locale);
     }
-    TimeViewClicked() {
-        this.viewmode = this.viewmode === 'time' ? 'day' : 'time';
-        // this.toggleCalendarMode(this.CalendarMode.Time);
-        this.onTimeView.emit(this.viewmode);
+
+    toggleCalendarMode(mode: ECalendarMode) {
+        if (this.currentCalendarMode !== mode) {
+            this.currentCalendarMode = mode;
+        }
+
+        this.onModeChange.emit(this.ecalendarModeToMode(this.currentCalendarMode));
+        this.cd.markForCheck();
     }
+
+    TimeViewClicked() {
+        let _result = this.currentCalendarMode === ECalendarMode.Time ? ECalendarMode.Day : ECalendarMode.Time;
+        this.toggleCalendarMode(_result);
+        this.onTimeView.emit(this.currentCalendarMode);
+    }
+
     TimeChanged(evt) {
         this.onTimeChange.emit(evt);
     }

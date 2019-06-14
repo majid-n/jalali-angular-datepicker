@@ -3,47 +3,50 @@
 & {
   dp-day-calendar {
     display: inline-block;
+    background: @c-white;
 
     .dp-day-calendar-container {
       background: @c-white;
-      width: 250px;
+      width: @main-width;
+      height: @main-height;
       overflow: hidden;
       .main-wrapper {
         display: flex;
-        height: 230px;
-        flex-direction: row;
-        transform: translateX(-250px);
-        transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        // height: 230px;
+        flex-direction: column;
+        transform: translateY(-@main-height);
+        transition: transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
         &.day {
-          transform: translateX(-250px);
+          transform: translateY(-@main-height);
         }
         &.time {
-          transform: translateX(-500px);
+          transform: translateY(-@main-height * 2);
         }
         &.month {
-          transform: translateX(0);
+          transform: translateY(0);
         }
-
-        &.rtl {
-            .dp-calendar-wrapper {
-                direction: rtl;
-                .dp-calendar-day {
-                    font-size: 13px;
-                }
-            }
+        &:not(.rtl) {
+            font-family: Arial, Helvetica, sans-serif;
         }
-
+        & > * {
+            min-width: @main-width;
+            min-height: @main-height;
+        }
         .dp-calendar-wrapper {
             box-sizing: border-box;
             padding: 10px;
-            min-width: 250px;
+            // min-width: 250px;
             position: relative;
             overflow: hidden;
             background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             //border: 1px solid @c-black;
             .dp-weekdays {
                 display: flex;
-                justify-content: space-around;
+                border-bottom: 1px dashed #eee;
+                justify-content: space-between;
             }
         
             .dp-calendar-weekday:first-child {
@@ -51,6 +54,7 @@
             }
         
             &.rtl {
+                direction: rtl;
                 .dp-calendar-day {
                     font-size: 13px;
                 }
@@ -119,7 +123,7 @@
 
     .dp-prev-month,
     .dp-next-month {
-      opacity: 0.3;
+      color: #ccc;
     }
 
     .dp-hide-near-month {
@@ -145,13 +149,12 @@
     &.dp-material {
       .dp-calendar-weekday {
         height: @basic-height - 5px;
-        // width: @basic-height;
+        width: @basic-height;
         line-height: @basic-height - 5px;
         color: @c-primary;
         border: none;
         font-size: 0.75rem;
         opacity: 0.6;
-        display: flex;
         font-weight: bold;
         justify-content: space-between;
       }

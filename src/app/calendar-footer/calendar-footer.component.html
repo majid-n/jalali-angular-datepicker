@@ -5,8 +5,8 @@
         *ngIf="showGoToCurrent"
         (click)="GoToCurrent()">
         <ng-container [ngSwitch]="currentMode">
-            <span *ngSwitchCase="'time'">الان</span>
-            <span *ngSwitchCase="'month'">این ماه</span>
+            <span *ngSwitchCase="CalendarMode.Time">الان</span>
+            <span *ngSwitchCase="CalendarMode.Month">این ماه</span>
             <span *ngSwitchDefault>امروز</span>
         </ng-container>
     </button>
@@ -20,7 +20,7 @@
     <button
         type="button"
         class="dp-footer-btn dp-time-btn"
-        [ngClass]="{'dp-calendar-icon': currentMode === 'time'}"
+        [ngClass]="{'dp-calendar-icon': currentMode === CalendarMode.Time}"
         *ngIf="showTimeView"
         (click)="TimeView()">
     </button>
