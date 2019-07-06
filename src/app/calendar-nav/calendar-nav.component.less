@@ -10,7 +10,12 @@
             height: @navHeight;
             flex-direction: row-reverse;
             border-bottom: 1px solid #e0e0e0 !important;
-            &.rtl { flex-direction: row; }
+            &.rtl {
+                flex-direction: row;
+                .dp-nav-header-btn {
+                    flex-direction: row-reverse;
+                }
+            }
         }
 
         .dp-showtime {
@@ -139,6 +144,8 @@
                 font-size: 14px;
                 width: 100%;
                 padding: 7px;
+                display: flex;
+                justify-content: space-around;
                 transition: background-color 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 
                 &:hover {

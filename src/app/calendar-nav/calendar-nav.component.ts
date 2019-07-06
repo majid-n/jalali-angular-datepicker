@@ -17,7 +17,7 @@ import { ECalendarMode } from '../common/models/calendar.model';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarNavComponent {
-    @Input() label: string;
+    @Input() labels: string[];
     @Input() rtl: boolean;
     @Input() currentMode: ECalendarMode;
     @Input() isLabelClickable: boolean = false;

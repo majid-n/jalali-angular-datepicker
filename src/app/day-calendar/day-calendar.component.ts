@@ -88,7 +88,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     componentConfig: IDayCalendarConfigInternal;
     timeSelectConfig: ITimeSelectConfig;
     _selected: Moment[];
-    weeks: IDay[][];
+    months = [];
     weekdays: Moment[];
     _currentDateView: Moment;
     inputValue: CalendarValue;
@@ -99,7 +99,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     _shouldShowCurrent: boolean = true;
     _showSwitchLocale: boolean = true;
     _showTimeView: boolean = true;
-    navLabel: string;
+    navLabel: string[];
     showLeftNav: boolean;
     showRightNav: boolean;
     showLeftSecondaryNav: boolean;
@@ -123,8 +123,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     set currentDateView(current: Moment) {
         let ismonth = this.currentCalendarMode === this.CalendarMode.Month;
         this._currentDateView = current.clone();
-        this.weeks = this.dayCalendarService
-            .generateMonthArray(this.componentConfig, this._currentDateView, this.selected);
+        this.setMonths(this._currentDateView);
         this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig, this._currentDateView, ismonth ? 'year' : 'month');
         this.showLeftNav = this.dayCalendarService.shouldShowLeft(this.componentConfig.min, this.currentDateView);
         this.showRightNav = this.dayCalendarService.shouldShowRight(this.componentConfig.max, this.currentDateView);
@@ -176,6 +175,18 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         return this.componentConfig.locale === 'fa';
     }
 
+    setMonths(current: Moment) {
+        this.months = [];
+        for (let i = 0; i < this.componentConfig.months; i++) {
+            let next = current.clone().add(i , 'month');
+            let val = i === 0 ? current : next;
+            this.months.push({
+                name: val.format('MMM YYYY'),
+                items: this.dayCalendarService.generateMonthArray(this.componentConfig, val, this.selected)
+            });
+        }
+    }
+
     modeToEcalendarMode(mode: CalendarMode): ECalendarMode {
         let _result: ECalendarMode;
         switch (mode) {
@@ -219,27 +230,19 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     }
 
     writeValue(value: CalendarValue): void {
-        if (value === this.inputValue
-            || (this.inputValue
-                && (moment.isMoment(this.inputValue)) && (this.inputValue as Moment).isSame(<MomentInput>value))
-        ) {
+        if (value === this.inputValue ||
+            (this.inputValue && (moment.isMoment(this.inputValue)) &&
+            (this.inputValue as Moment).isSame(<MomentInput>value))) {
             return;
         }
 
         this.inputValue = value;
-
         if (value) {
-            this.selected = this.utilsService
-                .convertToMomentArray(value, this.componentConfig.format, this.componentConfig.allowMultiSelect, this.componentConfig.locale);
-            this.inputValueType = this.utilsService
-                .getInputType(this.inputValue, this.componentConfig.allowMultiSelect);
-        } else {
-            this.selected = [];
-        }
+            this.selected = this.utilsService.convertToMomentArray(value, this.componentConfig.format, this.componentConfig.allowMultiSelect, this.componentConfig.locale);
+            this.inputValueType = this.utilsService.getInputType(this.inputValue, this.componentConfig.allowMultiSelect);
+        } else this.selected = [];
 
-        this.weeks = this.dayCalendarService
-            .generateMonthArray(this.componentConfig, this.currentDateView, this.selected);
-
+        this.setMonths(this.currentDateView);
         this.cd.markForCheck();
     }
 
@@ -282,14 +285,10 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
     }
 
     dayClicked(day: IDay) {
-        if (day.selected && !this.componentConfig.unSelectOnClick) {
-            return;
-        }
+        if (day.selected && !this.componentConfig.unSelectOnClick) return;
 
-        this.selected = this.utilsService
-            .updateSelected(this.componentConfig.allowMultiSelect, this.selected, day);
-        this.weeks = this.dayCalendarService
-            .generateMonthArray(this.componentConfig, this.currentDateView, this.selected);
+        this.selected = this.utilsService.updateSelected(this.componentConfig.allowMultiSelect, this.selected, day);
+        this.setMonths(this.currentDateView);
         this.onSelect.emit(day);
     }
 
@@ -356,14 +355,12 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         if (this.componentConfig.weekDayFormatter) {
             return this.componentConfig.weekDayFormatter(weekday.day());
         }
-
         return weekday.format(this.componentConfig.weekDayFormat);
     }
 
     monthSelected(month: IMonth) {
         this.currentDateView = month.date.clone();
-        this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig,
-        this.currentDateView, 'month');
+        this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig, this.currentDateView, 'month');
         this.onMonthSelect.emit(month);
         this.toggleCalendarMode(ECalendarMode.Day);
     }

@@ -353,16 +353,20 @@ export class UtilsService {
         }
     }
 
-    getHeaderLabel(config: IMonthCalendarConfig | IDayCalendarConfigInternal, year: Moment, type: string): string {
-        if (config[`${type}Formatter`]) {
-            return config[`${type}Formatter`](year);
+    getHeaderLabel(config: IDayCalendarConfigInternal, year: Moment, type: string): string[] {
+        if (config[`${type}Formatter`]) return config[`${type}Formatter`](year);
+        year.locale(config.locale);
+
+        let labels = [];
+        for (let i = 0; i < config.months; i++) {
+            let _year = config.months > 1 ? year.clone().add(i, 'month') : year;
+            let val = config.locale === 'fa' ?
+                this.toPersian(_year.format(config[`${type}Format`])) :
+                _year.format(config[`${type}Format`]);
+            labels.push(val)
         }
 
-        year.locale(config.locale);
-        let val = config.locale === 'fa' ?
-                                this.toPersian(year.format(config[`${type}Format`])) :
-                                year.format(config[`${type}Format`]);
-        return val;
+        return labels;
     }
 
     toPersian(value: string | number): string {

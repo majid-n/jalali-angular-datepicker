@@ -22,14 +22,14 @@
     <div class="dp-nav-header">
         <div [hidden]="isLabelClickable"
             [attr.data-hidden]="isLabelClickable"
-            [innerText]="label">
+            [innerText]="labels.join(',')">
         </div>
         <button type="button"
                 class="dp-nav-header-btn"
                 [hidden]="!isLabelClickable"
                 [attr.data-hidden]="!isLabelClickable"
-                (click)="labelClicked()"
-                [innerText]="label">
+                (click)="labelClicked()">
+                <span *ngFor="let label of labels">{{ label }}</span>
         </button>
     </div>
 

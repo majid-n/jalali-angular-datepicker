@@ -30,6 +30,7 @@ export interface IConfig {
     showSwitchLocale?: boolean;
     showTimeView?: boolean;
     unSelectOnClick?: boolean;
+    months?: number;
 }
 
 export interface IDayCalendarConfig extends IConfig,

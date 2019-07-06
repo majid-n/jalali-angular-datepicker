@@ -1,5 +1,5 @@
 <dp-calendar-nav
-    [label]="navLabel"
+    [labels]="navLabel"
     [showLeftNav]="showLeftNav"
     [showRightNav]="showRightNav"
     [showLeftSecondaryNav]="showLeftSecondaryNav"
@@ -29,35 +29,27 @@
             (onSelect)="monthSelected($event)">
         </dp-month-calendar>
         
-        <div class="dp-calendar-wrapper" [ngClass]="{'dp-hide-near-month': !componentConfig.showNearMonthDays, 'rtl': isFarsi()}">
-            <div class="dp-weekdays">
-                <span class="dp-calendar-weekday" *ngFor="let weekday of weekdays" [innerText]="getWeekdayName(weekday)"></span>
+        <div class="months">
+            <div class="dp-calendar-wrapper" *ngFor="let month of months" [ngClass]="{'dp-hide-near-month': !componentConfig.showNearMonthDays, 'rtl': isFarsi()}">
+                <!-- <div class="dp-monthname">{{ month.name }}</div> -->
+                <div class="dp-weekdays">
+                    <span class="dp-calendar-weekday" *ngFor="let weekday of weekdays" [innerText]="getWeekdayName(weekday)"></span>
+                </div>
+                <div class="dp-calendar-week" *ngFor="let week of month.items; let j = index">
+                    <span class="dp-week-number" *ngIf="componentConfig.showWeekNumbers" [innerText]="week[0].date.isoWeek()"></span>
+                    <button
+                        type="button"
+                        class="dp-calendar-day slideIn"
+                        *ngFor="let day of week; let i = index"
+                        [ngStyle]="{'animation-delay.ms': j * i * 10}"
+                        [attr.data-date]="day.date.format(componentConfig.format)"
+                        (click)="dayClicked(day)"
+                        [disabled]="day.disabled"
+                        [ngClass]="getDayBtnCssClass(day)"
+                        [innerText]="getDayBtnText(day)">
+                    </button>
+                </div>
             </div>
-            <div class="dp-calendar-week" *ngFor="let week of weeks; let j = index">
-                <span
-                    class="dp-week-number"
-                    *ngIf="componentConfig.showWeekNumbers"
-                    [innerText]="week[0].date.isoWeek()">
-                </span>
-                <button
-                    type="button"
-                    class="dp-calendar-day slideIn"
-                    *ngFor="let day of week; let i = index"
-                    [ngStyle]="{'animation-delay.ms': j * i * 10}"
-                    [attr.data-date]="day.date.format(componentConfig.format)"
-                    (click)="dayClicked(day)"
-                    [disabled]="day.disabled"
-                    [ngClass]="getDayBtnCssClass(day)"
-                    [innerText]="getDayBtnText(day)">
-                </button>
-            </div>
-            <!-- <dp-time-select
-                [theme]="theme"
-                [inline]="true"
-                [config]="timeSelectConfig"
-                [ngModel]="_selected && _selected[0]"
-                (onChange)="TimeChanged($event)">
-            </dp-time-select> -->
         </div>
 
         <dp-time-select

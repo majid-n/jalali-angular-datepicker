@@ -7,7 +7,7 @@
 
     .dp-day-calendar-container {
       background: @c-white;
-      width: @main-width;
+    //   width: @main-width;
       height: @main-height;
       overflow: hidden;
       .main-wrapper {
@@ -27,6 +27,7 @@
         }
         &:not(.rtl) {
             font-family: Arial, Helvetica, sans-serif;
+            .months { flex-direction: row; }
         }
         & > * {
             min-width: @main-width;
@@ -43,6 +44,14 @@
             flex-direction: column;
             justify-content: space-between;
             //border: 1px solid @c-black;
+            // .dp-monthname {
+            //     text-align: center;
+            //     &:before {
+            //         content: '';
+            //         position: absolute;
+            //         border-top: 1px solid #eee;
+            //     }
+            // }
             .dp-weekdays {
                 display: flex;
                 border-bottom: 1px dashed #eee;
@@ -59,6 +68,11 @@
                     font-size: 13px;
                 }
             }
+        }
+        .months {
+            min-width: 460px;
+            display: flex;
+            flex-direction: row-reverse;
         }
       }
     }

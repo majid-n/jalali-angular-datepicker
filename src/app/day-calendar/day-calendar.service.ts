@@ -17,11 +17,13 @@ export class DayCalendarService {
         firstDayOfWeek: 'sa',
         weekDayFormat: 'dd',
         format: 'YYYY/M/D',
+        yearFormat: 'YYYY',
         monthFormat: 'MMMM YYYY',
         dayBtnFormat: 'D',
         allowMultiSelect: false,
         enableMonthSelector: true,
-        locale: 'fa'
+        locale: 'fa',
+        months: 2
     };
     readonly GREGORIAN_CONFIG_EXTENTION: IDayCalendarConfig = {
         firstDayOfWeek: 'su',
