@@ -5,10 +5,16 @@
 @c-light-gray: #e0e0e0;
 
 @basic-height: 30px;
-@basic-width: 252px;
+@main-height: (@basic-height * 6) + @basic-height + 20;
 
-@main-width: 250px;
-@main-height: 230px;
+// .generate-columns(4);
+
+// .generate-columns(@n, @i: 20) when (@i =< @n) {
+//   .column-@{i} {
+//     width: (@i * 100% / @n);
+//   }
+//   .generate-columns(@n, (@i + 5));
+// }
 
 .arrow(@deg) {
     &::before {

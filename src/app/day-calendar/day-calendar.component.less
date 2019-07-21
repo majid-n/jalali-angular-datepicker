@@ -30,7 +30,7 @@
             .months { flex-direction: row; }
         }
         & > * {
-            min-width: @main-width;
+            // min-width: @main-width;
             min-height: @main-height;
         }
         .dp-calendar-wrapper {
@@ -42,7 +42,7 @@
             background-color: #fff;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            flex: 1;
             //border: 1px solid @c-black;
             // .dp-monthname {
             //     text-align: center;
@@ -70,7 +70,7 @@
             }
         }
         .months {
-            min-width: 460px;
+            // min-width: 460px;
             display: flex;
             flex-direction: row-reverse;
         }
@@ -80,7 +80,7 @@
 
     .dp-weekdays {
       font-size: 15px;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
 
     .dp-gregorian {
@@ -207,7 +207,7 @@
         }
       }
 
-      .dp-current-day {
+      .dp-current-day:not(.dp-prev-month) {
         border-radius: 50%;
         border: 1px solid @c-primary;
       }

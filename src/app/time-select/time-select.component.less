@@ -6,12 +6,14 @@
 
     .dp-time-calendar-container {
       background: @c-white;
-    //   width: @main-width;
       height: @main-height;
+      display: flex;
     }
 
     .dp-time-wrapper {
-      //border: 1px solid @c-black;
+        overflow: hidden;
+        flex: 1;
+        align-self: center;
       &.rtl {
         direction: rtl;
         .dp-time-select-controls {
@@ -21,7 +23,6 @@
     }
 
     .dp-time-select-controls {
-      margin: 42px 0;
       font-size: 25px;
       text-align: center;
       line-height: normal;
@@ -49,8 +50,17 @@
       padding: 0;
       position: relative;
       color: @c-light-gray;
-      .arrow(0deg);
       margin: 0 auto;
+      .arrow(0deg);
+        box-sizing: border-box;
+        background: transparent;
+        border: none;
+        outline: none;
+        border-radius: 50%;
+        &:hover {
+            background: @c-light-gray;
+            color: @c-white;
+        }
     }
 
     .dp-time-select-control-up::before {
@@ -72,34 +82,6 @@
     .dp-time-select-display-meridiem {
       padding: 0 3px;
       display: inline-block;
-    }
-
-    &.dp-material {
-      .dp-time-wrapper {
-        // min-height: 230px;
-        // min-width: 250px;
-        overflow: hidden;
-      }
-
-      .dp-time-select-control-up,
-      .dp-time-select-control-down {
-        box-sizing: border-box;
-        background: transparent;
-        border: none;
-        outline: none;
-        border-radius: 50%;
-
-        // &::before {
-        //   left: 0;
-        //   height: 7px;
-        //   width: 7px;
-        // }
-
-        &:hover {
-          background: @c-light-gray;
-          color: @c-white;
-        }
-      }
     }
   }
 }
