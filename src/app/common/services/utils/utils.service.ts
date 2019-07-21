@@ -363,10 +363,10 @@ export class UtilsService {
             let val = config.locale === 'fa' ?
                 this.toPersian(_year.format(config[`${type}Format`])) :
                 _year.format(config[`${type}Format`]);
-            labels.push(val)
+            labels.push(val);
         }
 
-        return labels;
+        return type === 'year' ? [labels[0]] : labels;
     }
 
     toPersian(value: string | number): string {

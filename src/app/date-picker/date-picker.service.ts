@@ -84,7 +84,8 @@ export class DatePickerService {
             showGoToCurrent: pickerConfig.showGoToCurrent,
             showSwitchLocale: pickerConfig.showSwitchLocale,
             showTimeView: pickerConfig.showTimeView,
-            unSelectOnClick: pickerConfig.unSelectOnClick
+            unSelectOnClick: pickerConfig.unSelectOnClick,
+            months: pickerConfig.months
         };
     }
 

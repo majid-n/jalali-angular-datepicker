@@ -23,7 +23,7 @@ export class DayCalendarService {
         allowMultiSelect: false,
         enableMonthSelector: true,
         locale: 'fa',
-        months: 2
+        months: 1
     };
     readonly GREGORIAN_CONFIG_EXTENTION: IDayCalendarConfig = {
         firstDayOfWeek: 'su',

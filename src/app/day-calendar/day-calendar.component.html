@@ -29,7 +29,7 @@
             (onSelect)="monthSelected($event)">
         </dp-month-calendar>
         
-        <div class="months">
+        <div [class.months]="months.length > 1">
             <div class="dp-calendar-wrapper" *ngFor="let month of months" [ngClass]="{'dp-hide-near-month': !componentConfig.showNearMonthDays, 'rtl': isFarsi()}">
                 <!-- <div class="dp-monthname">{{ month.name }}</div> -->
                 <div class="dp-weekdays">
@@ -46,7 +46,7 @@
                         (click)="dayClicked(day)"
                         [disabled]="day.disabled"
                         [ngClass]="getDayBtnCssClass(day)"
-                        [innerText]="getDayBtnText(day)">
+                        [innerHtml]="getDayBtnText(day)">
                     </button>
                 </div>
             </div>

@@ -177,6 +177,7 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
 
     setMonths(current: Moment) {
         this.months = [];
+        
         for (let i = 0; i < this.componentConfig.months; i++) {
             let next = current.clone().add(i , 'month');
             let val = i === 0 ? current : next;

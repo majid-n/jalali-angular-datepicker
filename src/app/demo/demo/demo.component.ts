@@ -202,7 +202,8 @@ export class DemoComponent {
         inputClasses: '',
         returnedValueType: ECalendarValue.String,
         unSelectOnClick: true,
-        hideOnOutsideClick: true
+        hideOnOutsideClick: true,
+        months: 2
     };
     config: IDatePickerConfig = { ...this.gregorianSystemDefaults, ...this.jalaliConfigExtension };
     isAtTop: boolean = true;
