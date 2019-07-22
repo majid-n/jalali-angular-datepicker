@@ -15,7 +15,7 @@ export class DatePickerService {
     private defaultConfig: IDatePickerConfigInternal = {
         closeOnSelect: true,
         closeOnSelectDelay: 100,
-        format: 'YYYY-MM-D',
+        format: 'YYYY/MM/DD',
         openOnFocus: true,
         openOnClick: true,
         onOpenDelay: 0,
@@ -25,7 +25,8 @@ export class DatePickerService {
         enableMonthSelector: true,
         showGoToCurrent: true,
         locale: 'fa',
-        hideOnOutsideClick: true
+        hideOnOutsideClick: true,
+        unSelectOnClick: true
     };
     private gregorianExtensionConfig: IDatePickerConfig = {
         format: 'DD-MM-YYYY',

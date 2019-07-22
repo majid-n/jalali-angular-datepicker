@@ -12,16 +12,13 @@ const moment = momentNs;
 export class DayCalendarService {
     private readonly DAYS = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
     readonly DEFAULT_CONFIG: IDayCalendarConfig = {
-        showNearMonthDays: true,
-        showWeekNumbers: false,
         firstDayOfWeek: 'sa',
         weekDayFormat: 'dd',
-        format: 'YYYY/M/D',
         yearFormat: 'YYYY',
         monthFormat: 'MMMM YYYY',
         dayBtnFormat: 'D',
+        monthBtnFormat: 'MMM',
         allowMultiSelect: false,
-        enableMonthSelector: true,
         locale: 'fa',
         months: 1
     };
@@ -31,8 +28,7 @@ export class DayCalendarService {
         format: 'DD-MM-YYYY',
         monthFormat: 'MMM, YYYY',
         locale: 'en',
-        dayBtnFormat: 'DD',
-        unSelectOnClick: true
+        dayBtnFormat: 'DD'
     };
 
     constructor(private utilsService: UtilsService) {
