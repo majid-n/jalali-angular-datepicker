@@ -1,7 +1,7 @@
 {
     "name": "ngx-jdatepicker",
     "author": "MajiD Noorali",
-    "version": "1.4.0",
+    "version": "1.5.1",
     "license": "MIT",
     "main": "index.js",
     "scripts": {
@@ -15,7 +15,7 @@
         "e2e:headless": "ng e2e -- headless",
         "build:demo": "rm -rf demo/*.js && rm -rf demo/*.css && ng build --prod --aot=false --bh /jalali-angular-datepicker/ && npm run build:index && cp dist/* demo",
         "build:index": "cd build-helpers && node index-maker.js",
-        "build:prod": "ng-packagr -p package.json && cp -R screenshots bin",
+        "build:prod": "ng-packagr -p package.json",
         "release": "npm run build:prod && npm publish bin",
         "pack": "cd bin && npm pack"
     },
