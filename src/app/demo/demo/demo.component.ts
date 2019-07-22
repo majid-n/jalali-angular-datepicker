@@ -206,10 +206,10 @@ export class DemoComponent {
         months: 2
     };
     config: IDatePickerConfig = { ...this.gregorianSystemDefaults, ...this.jalaliConfigExtension };
+
     isAtTop: boolean = true;
 
-    constructor() {
-    }
+    constructor() {}
 
     @HostListener('document:scroll')
     @debounce(100)
