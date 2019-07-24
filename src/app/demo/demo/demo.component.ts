@@ -196,7 +196,7 @@ export class DemoComponent {
         showTwentyFourHours: true,
         timeSeparator: ':',
         multipleYearsNavigateBy: 10,
-        showMultipleYearsNavigation: ECalendarMode.Month,
+        // showMultipleYearsNavigation: ECalendarMode.Month,
         locale: 'en',
         hideInputContainer: false,
         inputClasses: '',

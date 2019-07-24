@@ -4,7 +4,7 @@ import { UtilsService } from '../common/services/utils/utils.service';
 import { IDayCalendarConfig } from '../day-calendar/day-calendar-config.model';
 import { TimeSelectService } from '../time-select/time-select.service';
 import { ITimeSelectConfig } from '../time-select/time-select-config.model';
-import { CalendarMode } from '../common/models/calendar.model';
+import { CalendarMode, ECalendarMode } from '../common/models/calendar.model';
 import { Moment } from 'jalali-moment';
 import * as momentNs from 'jalali-moment';
 const moment = momentNs;
@@ -26,7 +26,8 @@ export class DatePickerService {
         showGoToCurrent: true,
         locale: 'fa',
         hideOnOutsideClick: true,
-        unSelectOnClick: true,
+        unSelectOnClick: false,
+        showMultipleYearsNavigation: ECalendarMode.Month,
     };
     private gregorianExtensionConfig: IDatePickerConfig = {
         format: 'DD-MM-YYYY',

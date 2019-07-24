@@ -80,7 +80,7 @@ export class DatePickerComponent implements OnChanges,
     OnDestroy {
     isInitialized: boolean = false;
     @Input() config: IDatePickerConfig;
-    @Input() mode: CalendarMode;
+    @Input() mode: CalendarMode = 'day';
     @Input() placeholder: string = '';
     @Input() disabled: boolean = false;
     @Input() displayDate: SingleCalendarValue;
