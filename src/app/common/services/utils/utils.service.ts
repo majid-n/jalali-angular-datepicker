@@ -10,7 +10,6 @@ import { Injectable } from '@angular/core';
 import * as momentNs from 'jalali-moment';
 import { Moment, unitOfTime } from 'jalali-moment';
 import { ICalendarInternal } from '../../models/calendar.model';
-import { IMonthCalendarConfig } from '../../..';
 import { IDayCalendarConfigInternal } from '../../../day-calendar/day-calendar-config.model';
 const moment = momentNs;
 

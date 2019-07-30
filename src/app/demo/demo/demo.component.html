@@ -4,14 +4,30 @@
 
         <form #form="ngForm">
             <div class="dp-picker-day" *ngIf="pickerMode === 'dayPicker'">
-                <ngx-jdatepicker id="datePicker" name="datePicker" #dateComponent #datePickerModel="ngModel"
-                    [dir]="direction" [mode]="calendarMode" [disabled]="disabled" [minDate]="validationMinDate"
-                    [maxDate]="validationMaxDate" [displayDate]="displayDate" [required]="required"
-                    [placeholder]="placeholder" [config]="config" [theme]="material ? 'dp-material dp-main' : 'dp-main'"
-                    [(ngModel)]="date" (open)="opened()" (close)="closed()" (onChange)="log($event)"
-                    (onGoToCurrent)="log($event, 'current button clicked')"
-                    (onSwitchLocale)="log($event, 'switch locale clicked')" (onTimeView)="log($event, 'tive view')"
-                    (onLeftNav)="onLeftNav($event)" (onRightNav)="onRightNav($event)" (onLeftSecondaryNav)="log($event)"
+                <ngx-jdatepicker id="datePicker"
+                    #dateComponent
+                    #datePickerModel="ngModel"
+                    name="datePicker"
+                    [dir]="direction"
+                    [config]="config"
+                    [(ngModel)]="date"
+                    [theme]="'dp-main'"
+                    [mode]="calendarMode"
+                    [disabled]="disabled"
+                    [required]="required"
+                    [displayDate]="displayDate"
+                    [placeholder]="placeholder"
+                    [minDate]="validationMinDate"
+                    [maxDate]="validationMaxDate"
+                    (open)="opened()"
+                    (close)="closed()"
+                    (onChange)="log($event)"
+                    (onTimeView)="log($event)"
+                    (onGoToCurrent)="log($event)"
+                    (onSwitchLocale)="log($event)"
+                    (onLeftNav)="onLeftNav($event)"
+                    (onRightNav)="onRightNav($event)"
+                    (onLeftSecondaryNav)="log($event)"
                     (onRightSecondaryNav)="log($event)">
                 </ngx-jdatepicker>
                 <div class="dp-validations">
@@ -24,7 +40,7 @@
             </div>
         </form>
 
-        <ngx-jdatepicker [(ngModel)]="date" theme="dp-material"></ngx-jdatepicker>
+        <ngx-jdatepicker [(ngModel)]="date1"></ngx-jdatepicker>
     </div>
 
     <div class="dp-page-content">
@@ -46,20 +62,6 @@
                     </label>
                     <label>month
                         <input type="radio" (change)="calendarModeChanged('month')" name="calmode">
-                    </label>
-                </div>
-            </div>
-
-            <div class="dp-option" *ngIf="isValidConfig('theme')">
-                <span class="dp-option-header">
-                    Theme (theme | for example the built in material theme - dp-material):
-                </span>
-                <div class="dp-option-playground">
-                    <label>Material Theme
-                        <input id="themeOn" type="radio" [(ngModel)]="material" name="style" [value]="true">
-                    </label>
-                    <label>No Theme
-                        <input id="themeOff" type="radio" [(ngModel)]="material" name="style" [value]="false">
                     </label>
                 </div>
             </div>
@@ -115,7 +117,7 @@
                     Min-Date Validation (minDate):
                 </span>
                 <div class="dp-option-playground">
-                    <ngx-jdatepicker id="minDatePicker" [dir]="direction" theme="dp-material"
+                    <ngx-jdatepicker id="minDatePicker" [dir]="direction"
                         [(ngModel)]="validationMinDate" [mode]="'day'" [config]="{format: 'YYYY/MM/DD',locale:'fa'}"
                         (ngModelChange)="validatorsChanged()" placeholder="Select a min date">
                     </ngx-jdatepicker>
@@ -127,7 +129,7 @@
                     Max-Date Validation (maxDate):
                 </span>
                 <div class="dp-option-playground">
-                    <ngx-jdatepicker id="maxDatePicker" [dir]="direction" theme="dp-material"
+                    <ngx-jdatepicker id="maxDatePicker" [dir]="direction"
                         [(ngModel)]="validationMaxDate" [mode]="pickerMode.startsWith('daytime') ? 'daytime' : 'day'"
                         [config]="{format: config.format}" (ngModelChange)="validatorsChanged()"
                         placeholder="Select a max date">
@@ -140,7 +142,7 @@
                     Display Date (displayDate):
                 </span>
                 <div class="dp-option-playground">
-                    <ngx-jdatepicker id="displayDate" [dir]="direction" theme="dp-material" [(ngModel)]="displayDate"
+                    <ngx-jdatepicker id="displayDate" [dir]="direction" [(ngModel)]="displayDate"
                         [displayDate]="displayDate" mode="day" placeholder="Select a display date">
                     </ngx-jdatepicker>
                 </div>
@@ -151,7 +153,7 @@
                     Min-Time Validation (minTime):
                 </span>
                 <div class="dp-option-playground">
-                    <ngx-jdatepicker id="minTimeValidation" [dir]="direction" theme="dp-material"
+                    <ngx-jdatepicker id="minTimeValidation" [dir]="direction"
                         [(ngModel)]="validationMinTime" mode="time"
                         [config]="{format: 'HH:mm:ss', locale: config.locale}" (ngModelChange)="validatorsChanged()"
                         placeholder="Select a min time">
@@ -164,7 +166,7 @@
                     Max-Time Validation (maxTime):
                 </span>
                 <div class="dp-option-playground">
-                    <ngx-jdatepicker id="maxTimeValidation" [dir]="direction" theme="dp-material"
+                    <ngx-jdatepicker id="maxTimeValidation" [dir]="direction"
                         [(ngModel)]="validationMaxTime" mode="time"
                         [config]="{format: 'HH:mm:ss', locale: config.locale}" (ngModelChange)="validatorsChanged()"
                         placeholder="Select a max time">
@@ -235,7 +237,7 @@
                     Min Selectable Date (min):
                 </span>
                 <div class="dp-option-playground">
-                    <ngx-jdatepicker id="minSelectable" [dir]="direction" theme="dp-material" [(ngModel)]="config.min"
+                    <ngx-jdatepicker id="minSelectable" [dir]="direction" [(ngModel)]="config.min"
                         [mode]="pickerMode.startsWith('daytime') ? 'daytime' : 'day'" [config]="{format: config.format}"
                         (ngModelChange)="configChanged('min', config.min)" placeholder="Select a min date">
                     </ngx-jdatepicker>
@@ -247,7 +249,7 @@
                     Max Selectable Date (max):
                 </span>
                 <div class="dp-option-playground">
-                    <ngx-jdatepicker id="maxSelectable" [dir]="direction" theme="dp-material" [(ngModel)]="config.max"
+                    <ngx-jdatepicker id="maxSelectable" [dir]="direction" [(ngModel)]="config.max"
                         [mode]="pickerMode.startsWith('daytime') ? 'daytime' : 'day'" [config]="{format: config.format}"
                         (ngModelChange)="configChanged('max', config.max)" placeholder="Select a max date">
                     </ngx-jdatepicker>
@@ -259,7 +261,7 @@
                     Min Selectable Time (minTime):
                 </span>
                 <div class="dp-option-playground">
-                    <ngx-jdatepicker id="minTimeSelectable" [dir]="direction" theme="dp-material"
+                    <ngx-jdatepicker id="minTimeSelectable" [dir]="direction"
                         [(ngModel)]="config.minTime" mode="time" [config]="{format: 'HH:mm:ss'}"
                         (ngModelChange)="configChanged('minTime', config.minTime)" placeholder="Select a min time">
                     </ngx-jdatepicker>
@@ -271,7 +273,7 @@
                     Max Selectable Time (maxTime):
                 </span>
                 <div class="dp-option-playground">
-                    <ngx-jdatepicker id="maxTimeSelectable" [dir]="direction" theme="dp-material"
+                    <ngx-jdatepicker id="maxTimeSelectable" [dir]="direction"
                         [(ngModel)]="config.maxTime" mode="time" [config]="{format: 'HH:mm:ss'}"
                         (ngModelChange)="configChanged('maxTime', config.maxTime)" placeholder="Select a max time">
                     </ngx-jdatepicker>

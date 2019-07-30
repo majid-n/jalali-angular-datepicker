@@ -1,87 +1,82 @@
 @import "../common/styles/variables";
 
-& {
-  dp-time-select {
-    display: inline-block;
-
-    .dp-time-calendar-container {
-      background: @c-white;
-      height: @main-height;
-      display: flex;
-    }
-
+.dp-time-calendar-container {
+    background: @c-white;
+    height: @main-height;
+    display: flex;
+    
     .dp-time-wrapper {
         overflow: hidden;
         flex: 1;
         align-self: center;
-      &.rtl {
-        direction: rtl;
+        &.rtl {
+            direction: rtl;
+            .dp-time-select-controls {
+                flex-direction: row-reverse;
+            }
+        }
+
         .dp-time-select-controls {
-            flex-direction: row-reverse;
+            font-size: 25px;
+            text-align: center;
+            line-height: normal;
+            background: @c-white;
+            display: flex;
+            padding: 0;
+            justify-content: space-evenly;
+            align-items: center;
+
+            .dp-time-select-control {
+                font-size: inherit;
+                letter-spacing: 1px;
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                line-height: 3.5;
+
+                .dp-time-select-display-hours,
+                .dp-time-select-display-minutes,
+                .dp-time-select-display-seconds,
+                .dp-time-select-display-meridiem {
+                    padding: 0 3px;
+                    display: inline-block;
+                }
+
+                .dp-time-select-separator {
+                    width: 8px;
+                    font-size: 25px;
+                }
+                
+                .dp-time-select-control-up,
+                .dp-time-select-control-down {
+                    .arrow(0deg);
+                    cursor: pointer;
+                    width: 30px;
+                    height: 30px;
+                    padding: 0;
+                    position: relative;
+                    color: @c-light-gray;
+                    margin: 0 auto;
+                    box-sizing: border-box;
+                    background: transparent;
+                    border: none;
+                    outline: none;
+                    border-radius: 50%;
+                    &:hover {
+                        background: @c-light-gray;
+                        color: @c-white;
+                    }
+                }
+                
+                .dp-time-select-control-up::before {
+                    transform: rotate(-45deg);
+                }
+                
+                .dp-time-select-control-down::before {
+                    transform: rotate(135deg);
+                }
+            }
         }
-      }
     }
-
-    .dp-time-select-controls {
-      font-size: 25px;
-      text-align: center;
-      line-height: normal;
-      background: @c-white;
-      display: flex;
-      padding: 0;
-      justify-content: space-evenly;
-      align-items: center;
-    }
-
-    .dp-time-select-control {
-      font-size: inherit;
-      letter-spacing: 1px;
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      line-height: 3.5;
-    }
-
-    .dp-time-select-control-up,
-    .dp-time-select-control-down {
-      cursor: pointer;
-      width: 30px;
-      height: 30px;
-      padding: 0;
-      position: relative;
-      color: @c-light-gray;
-      margin: 0 auto;
-      .arrow(0deg);
-        box-sizing: border-box;
-        background: transparent;
-        border: none;
-        outline: none;
-        border-radius: 50%;
-        &:hover {
-            background: @c-light-gray;
-            color: @c-white;
-        }
-    }
-
-    .dp-time-select-control-up::before {
-      transform: rotate(-45deg);
-    }
-
-    .dp-time-select-control-down::before {
-      transform: rotate(135deg);
-    }
-
-    .dp-time-select-separator {
-      width: 8px;
-      font-size: 25px;
-    }
-
-    .dp-time-select-display-hours,
-    .dp-time-select-display-minutes,
-    .dp-time-select-display-seconds,
-    .dp-time-select-display-meridiem {
-      padding: 0 3px;
-      display: inline-block;
-    }
-  }
 }
+

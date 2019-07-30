@@ -7,7 +7,7 @@
     [isLabelClickable]="componentConfig.enableMonthSelector"
     [theme]="theme"
     [rtl]="isFarsi()"
-    [currentMode]="CalendarMode.Day"
+    [currentMode]="currentCalendarMode"
     (onLeftNav)="onNavClick('left')"
     (onRightNav)="onNavClick('right')"
     (onLeftSecondaryNav)="onLeftSecondaryNavClick()"
@@ -68,7 +68,7 @@
     [showGoToCurrent]="_shouldShowCurrent"
     [theme]="theme"
     [currentLocale]="componentConfig.locale"
-    [currentMode]="CalendarMode.Day"
+    [currentMode]="currentCalendarMode"
     (onSwitchLocale)="switchLocale()"
     (onTimeView)="TimeViewClicked()"
     (onGoToCurrent)="goToCurrent()">

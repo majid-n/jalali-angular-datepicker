@@ -1,7 +1,7 @@
 import debounce from '../../common/decorators/decorators';
 import { IDatePickerConfig } from '../../date-picker/date-picker-config.model';
 import { DatePickerComponent } from '../../date-picker/date-picker.component';
-import { ECalendarValue, INavEvent, ECalendarMode, CalendarMode } from '../../common/models/calendar.model';
+import { ECalendarValue, INavEvent, CalendarMode } from '../../common/models/calendar.model';
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as momentNs from 'jalali-moment';
@@ -108,6 +108,7 @@ export class DemoComponent {
     calendarMode: CalendarMode = 'day';
     direction: string = 'ltr';
     date: Moment;
+    date1 = moment();
     dates: Moment[] = [];
     material: boolean = true;
     required: boolean = false;
