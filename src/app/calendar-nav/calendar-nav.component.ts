@@ -38,19 +38,27 @@ export class CalendarNavComponent {
     @Output() onLabelClick: EventEmitter<null> = new EventEmitter();
 
     leftNavClicked() {
-        this[`on${this.rtl ? 'Right' : 'Left'}Nav`].emit();
+        if (this.rtl) this.onRightNav.emit();
+        else this.onLeftNav.emit();
+        // this[`on${this.rtl ? 'Right' : 'Left'}Nav`].emit();
     }
 
     rightNavClicked() {
-        this[`on${this.rtl ? 'Left' : 'Right'}Nav`].emit();
+        if (this.rtl) this.onLeftNav.emit();
+        else this.onRightNav.emit();
+        // this[`on${this.rtl ? 'Left' : 'Right'}Nav`].emit();
     }
 
     leftSecondaryNavClicked() {
-        this[`on${this.rtl ? 'Right' : 'Left'}SecondaryNav`].emit();
+        if (this.rtl) this.onRightSecondaryNav.emit();
+        else this.onLeftSecondaryNav.emit();
+        // this[`on${this.rtl ? 'Right' : 'Left'}SecondaryNav`].emit();
     }
 
     rightSecondaryNavClicked() {
-        this[`on${this.rtl ? 'Left' : 'Right'}SecondaryNav`].emit();
+        if (this.rtl) this.onLeftSecondaryNav.emit();
+        else this.onRightSecondaryNav.emit();
+        // this[`on${this.rtl ? 'Left' : 'Right'}SecondaryNav`].emit();
     }
 
     labelClicked() {
