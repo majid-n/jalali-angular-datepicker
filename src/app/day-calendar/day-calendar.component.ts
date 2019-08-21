@@ -125,8 +125,8 @@ export class DayCalendarComponent implements OnInit, OnChanges, ControlValueAcce
         this._currentDateView = current.clone();
         this.setMonths(this._currentDateView);
         this.navLabel = this.utilsService.getHeaderLabel(this.componentConfig, this._currentDateView, ismonth ? 'year' : 'month');
-        this.showLeftNav = this.dayCalendarService.shouldShowLeft(this.componentConfig.min, this.currentDateView);
-        this.showRightNav = this.dayCalendarService.shouldShowRight(this.componentConfig.max, this.currentDateView);
+        this[`show${this.isFarsi() ? 'Right' : 'Left'}Nav`] = this.dayCalendarService.shouldShowLeft(this.componentConfig.min, this.currentDateView);
+        this[`show${this.isFarsi() ? 'Left' : 'Right'}Nav`] = this.dayCalendarService.shouldShowRight(this.componentConfig.max, this.currentDateView);
         this.secondaryNavVisibility();
     }
 
