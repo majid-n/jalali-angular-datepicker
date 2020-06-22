@@ -1,5 +1,5 @@
 # Angular Jalali Date Picker
-انتخاب گر تاریخ شمسی در انگولار ۴
+انتخاب گر تاریخ شمسی در انگولار 9
 [دمو](https://fingerpich.github.io/jalali-angular-datepicker/)
 
 [![Build Status](https://travis-ci.org/fingerpich/jalali-angular-datepicker.svg?branch=jalali-master)](https://travis-ci.org/fingerpich/jalali-angular-datepicker) 
@@ -12,7 +12,10 @@
 
 ## تصاویر
 
-<img alt="date picker" src="./screenshots/date_picker.png" width="200px"><img alt="date time picker" src="./screenshots/date_time_picker.png" width="200px"><img alt="month picker" src="./screenshots/month_picker.png" width="200px">
+<img alt="Jalali Datepicker" src="./screenshots/1.jpg">
+<img alt="Gregorian Datepicker" src="./screenshots/3.jpg">
+<img alt="Time Picker" src="./screenshots/2.jpg">
+<img alt="Month Picker" src="./screenshots/4.jpg">
 
 ## فهرست مطالب :
 

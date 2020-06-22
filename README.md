@@ -1,6 +1,6 @@
 # Angular Jalali Date Picker
 
-This is a configurable jalali (persian, khorshidi, shamsi) date-picker build for Angular 2 - 5 applications and uses [jalali-moment](https://github.com/fingerpich/moment-jalaali) as its dependency. it's only Angular! No jQuery.
+This is a configurable jalali (persian, khorshidi, shamsi) date-picker build for Angular 9 applications and uses [jalali-moment](https://github.com/fingerpich/moment-jalaali) as its dependency. it's only Angular! No jQuery.
 [DEMO](https://fingerpich.github.io/jalali-angular-datepicker/)
 
 Read this in other languages: [فارسی](./README.fa.md)
@@ -15,14 +15,17 @@ Read this in other languages: [فارسی](./README.fa.md)
 
 ## Screenshots
 
-<img alt="date picker" src="./screenshots/date_picker.png" width="200px"><img alt="date time picker" src="./screenshots/date_time_picker.png" width="200px"><img alt="month picker" src="./screenshots/month_picker.png" width="200px">
+<img alt="Jalali Datepicker" src="./screenshots/1.jpg">
+<img alt="Gregorian Datepicker" src="./screenshots/3.jpg">
+<img alt="Time Picker" src="./screenshots/2.jpg">
+<img alt="Month Picker" src="./screenshots/4.jpg">
 
 ## Installation:
 
 1. Download from npm:
    `npm install ngx-jdatepicker --save`
 2. import the `NgxJDatePickerModule` module in typescript (.ts) or es6 files like below:  
-   `import {NgxJDatePickerModule} from 'ng2-jalali-date-picker';`
+   `import {NgxJDatePickerModule} from 'ngx-jdatepicker';`
 3. Add `NgxJDatePickerModule` to your module imports:
 
 ```ts
@@ -195,7 +198,7 @@ Container component:
 
 ```ts
 import {Component, ViewChild} from '@angular/core';
-import {DatePickerComponent} from 'ng2-jalali-date-picker';
+import {NgxJDatePickerModule} from 'ngx-jdatepicker';
 
 @Component({
 selector: 'my-container',
@@ -209,7 +212,7 @@ template: `
 `
 });
 class MyContainer {
-    @ViewChild('dayPicker') datePicker: DatePickerComponent;
+    @ViewChild('dayPicker') datePicker: NgxJDatePickerModule;
 
     open() {
         this.datePicker.api.open();

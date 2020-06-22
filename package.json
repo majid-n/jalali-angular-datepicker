@@ -1,7 +1,7 @@
 {
     "name": "ngx-jdatepicker",
     "author": "MajiD Noorali",
-    "version": "1.5.8",
+    "version": "1.5.9",
     "license": "MIT",
     "main": "index.js",
     "scripts": {
@@ -21,7 +21,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/majid-n/jalali-angular-datepicker.git"
+        "url": "https://github.com/majid-n/ngx-jdatepicker"
     },
     "private": false,
     "keywords": [
@@ -38,9 +38,6 @@
         "ts",
         "farsi"
     ],
-    "dependencies": {
-        "tslib": "^1.9.0"
-    },
     "peerDependencies": {
         "node-sass": "^4.12.0",
         "jalali-moment": "^3.2.3"
